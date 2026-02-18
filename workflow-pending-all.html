@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pending Workflows - PetroProcure</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-indigo: #4F46E5;
+            --warning-amber: #F59E0B;
+            --surface-bg: #F8FAFC;
+            --sidebar-width: 270px;
+        }
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            background-color: var(--surface-bg);
+            font-weight: 500;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: var(--sidebar-width);
+            background-color: #FFFFFF;
+            border-right: 1px solid #E5E7EB;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar-footer {
+            padding: 1rem;
+            border-top: 1px solid #e5e7eb;
+            background: #fff;
+        }
+
+        .sidebar-logo {
+            padding: 1.5rem 1rem;
+            flex-shrink: 0;
+        }
+        
+        .sidebar-logo h5 {
+            font-weight: 900;
+            color: #000000;
+            margin: 0;
+            font-size: 1.1rem;
+        }
+        
+        .sidebar-logo p {
+            font-size: 0.7rem;
+            color: #9CA3AF;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .sidebar-menu {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem 0;
+        }
+        
+        .menu-item {
+            padding: 0.75rem 1rem;
+            color: #6B7280;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.2s;
+            margin: 0.25rem 0.5rem;
+            border-radius: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .menu-item:hover {
+            background-color: #F3F4F6;
+            color: var(--primary-indigo);
+        }
+        
+        .menu-item.active {
+            background-color: #EEF2FF;
+            color: var(--primary-indigo);
+            font-weight: 600;
+        }
+        
+        .menu-item i {
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            padding-left: 2.5rem;
+        }
+        
+        .submenu.show {
+            max-height: 500px;
+        }
+        
+        .submenu .menu-item {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+        
+        .menu-item i.bi-chevron-down {
+            transition: transform 0.3s ease;
+        }
+        
+        .menu-item.expanded i.bi-chevron-down {
+            transform: rotate(180deg);
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .top-header {
+            background-color: #F8FAFC;
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
+        
+        .page-title {
+            font-weight: 900;
+            color: #111827;
+            margin: 0;
+            font-size: 1.75rem;
+        }
+        
+        .page-subtitle {
+            color: #9CA3AF;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin: 0;
+        }
+        
+        /* Content Area */
+        .content-area {
+            flex: 1;
+            padding: 2rem;
+        }
+        
+        /* Tab Switcher */
+        .tab-switcher {
+            display: inline-flex;
+            background-color: #F3F4F6;
+            border-radius: 1rem;
+            padding: 0.25rem;
+            gap: 0.25rem;
+            margin-bottom: 2rem;
+        }
+        
+        .tab-switcher .tab-btn {
+            padding: 0.5rem 1.5rem;
+            background: transparent;
+            border: none;
+            border-radius: 0.75rem;
+            color: #6B7280;
+            font-weight: 600;
+            transition: all 0.3s;
+            cursor: pointer;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            text-decoration: none;
+        }
+        
+        .tab-switcher .tab-btn.active {
+            background-color: #FFFFFF;
+            color: var(--primary-indigo);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .tab-switcher .tab-btn:hover:not(.active) {
+            background-color: #F9FAFB;
+        }
+        
+        /* Category Filter Buttons */
+        .category-filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .category-filter-btn {
+            padding: 0.75rem 1.5rem;
+            background: transparent;
+            border: 1px solid #E5E7EB;
+            border-radius: 0.75rem;
+            color: #6B7280;
+            font-weight: 600;
+            transition: all 0.3s;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .category-filter-btn:hover {
+            background-color: #F3F4F6;
+            border-color: #D1D5DB;
+        }
+        
+        .category-filter-btn.active {
+            background-color: var(--primary-indigo);
+            color: #FFFFFF;
+            border-color: var(--primary-indigo);
+        }
+        
+        /* Workflow Cards Grid */
+        .workflow-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 400px));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .workflow-card {
+            background: #FFFFFF;
+            border-radius: 2rem;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            cursor: pointer;
+            border: 1px solid #F3F4F6;
+        }
+        
+        .workflow-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+        }
+        
+        .workflow-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #EEF2FF, #E0E7FF);
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .workflow-icon i {
+            font-size: 1.5rem;
+            color: var(--primary-indigo);
+        }
+        
+        .workflow-card:hover .workflow-icon {
+            background: linear-gradient(135deg, var(--primary-indigo), #6366F1);
+        }
+        
+        .workflow-card:hover .workflow-icon i {
+            color: #FFFFFF;
+        }
+        
+        .badge-status {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            padding: 0.4rem 0.9rem;
+            border-radius: 1rem;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .badge-pending {
+            background-color: #f7e7d5;
+            color: #a85e0e;
+        }
+        
+        .workflow-category {
+            font-size: 0.7rem;
+            color: var(--primary-indigo);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .workflow-name {
+            font-weight: 700;
+            color: #111827;
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .workflow-card:hover .workflow-name {
+            color: var(--primary-indigo);
+        }
+        
+        .workflow-description {
+            font-size: 0.85rem;
+            font-style: italic;
+            color: #6B7280;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            min-height: 3rem;
+        }
+        
+        .workflow-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid #F3F4F6;
+        }
+        
+        .footer-info {
+            display: flex;
+            gap: 2rem;
+            font-size: 0.75rem;
+            color: #9CA3AF;
+        }
+        
+        .footer-info-item strong {
+            display: block;
+            color: #000000;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+        }
+        
+        .workflow-actions {
+            display: flex;
+            gap: 0.5rem;
+            opacity: 1;
+        }
+        
+        .workflow-action-btn {
+            width: 32px;
+            height: 32px;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            color: #6B7280;
+        }
+        
+        /* Empty State */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 2rem;
+            background: #FFFFFF;
+            border-radius: 2rem;
+            border: 2px dashed #D1D5DB;
+            margin-top: 2rem;
+            min-height: 400px;
+        }
+        
+        .empty-state-icon {
+            width: 80px;
+            height: 80px;
+            background: #F3F4F6;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .empty-state-icon i {
+            font-size: 2rem;
+            color: #9CA3AF;
+        }
+        
+        .empty-state-title {
+            font-weight: 900;
+            font-size: 1.5rem;
+            color: #111827;
+            margin-bottom: 0.75rem;
+        }
+        
+        .empty-state-description {
+            font-size: 0.95rem;
+            color: #6B7280;
+            text-align: center;
+            max-width: 500px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .btn-secondary-custom {
+            background: #F3F4F6;
+            border: none;
+            color: #6B7280;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-secondary-custom:hover {
+            background: #E5E7EB;
+            color: #374151;
+        }
+        
+        /* User Info */
+        .user-info {
+            background-color: #F9FAFB;
+            padding: 1rem;
+            margin: 0 0.5rem 1rem 0.5rem;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-shrink: 0;
+        }
+        
+        .user-label {
+            font-size: 0.65rem;
+            color: #9CA3AF;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-indigo), #7C3AED);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+        }
+        
+        .user-details h6 {
+            margin: 0;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #111827;
+        }
+        
+        .user-details p {
+            margin: 0;
+            font-size: 0.75rem;
+            color: #6B7280;
+        }
+        
+        /* Footer */
+        .main-footer {
+            background-color: #622525;
+            
+            padding: 1.5rem 2rem;
+            margin-top: auto;
+        }
+        
+        /* Hide/Show Content */
+        .content-section {
+            display: none;
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            <div class="d-flex align-items-center gap-2">
+                <div class="bg-primary text-white rounded-3 p-2" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
+                    <strong style="font-size: 0.9rem;">PP</strong>
+                </div>
+                <div>
+                    <h5>PetroProcure</h5>
+                    <p>E-PROCUREMENT V2</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="sidebar-menu">
+            <a href="#" class="menu-item">
+                <i class="bi bi-grid"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="#" class="menu-item">
+                <i class="bi bi-shield-check"></i>
+                <span>Accessibility</span>
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            
+            <a href="#" class="menu-item" id="maintenanceToggle">
+                <i class="bi bi-wrench"></i>
+                <span>Maintenance</span>
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            
+            <div class="submenu" id="maintenanceSubmenu">
+                <a href="product-category-list.html" class="menu-item">
+                    <i class="bi bi-layers"></i>
+                    <span>Product Categories</span>
+                </a>
+                <a href="price-base-list.html" class="menu-item">
+                    <i class="bi bi-database"></i>
+                    <span>Price Base</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="bi bi-box-seam"></i>
+                    <span>Product</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="bi bi-gear"></i>
+                    <span>Product Specification</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="bi bi-suitcase-lg"></i>
+                    <span>Local Agent</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="bi bi-truck"></i>
+                    <span>Supplier</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="bi bi-shield-check"></i>
+                    <span>GTC</span>
+                </a>
+            </div>
+            
+            <a href="#" class="menu-item expanded" id="workflowToggle">
+                <i class="bi bi-gear"></i>
+                <span>Workflow</span>
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            
+            <div class="submenu show" id="workflowSubmenu">
+                <a href="workflow-collection.html" class="menu-item active">
+                    <i class="bi bi-list-ul"></i>
+                    <span>Workflow Collection</span>
+                </a>
+                <a href="workflow-define.html" class="menu-item">
+                    <i class="bi bi-pencil-square"></i>
+                    <span>Define New Workflow</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="bi bi-check-circle"></i>
+                    <span>Verify Workflow</span>
+                </a>
+            </div>
+            
+            <a href="#" class="menu-item" id="TenderToggle">
+                <i class="bi bi-file-earmark-text"></i>
+                <span>Tender</span>
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            
+            <div class="submenu" id="TenderSubmenu">
+                <a href="#" class="menu-item">
+                    <i class="bi bi-layers"></i>
+                    <span>Tender Collection</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="bi bi-database"></i>
+                    <span>Create Tender</span>
+                </a>
+            </div>
+
+            <a href="#" class="menu-item">
+                <i class="bi bi-check2-square"></i>
+                <span>Verification Processes</span>
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            
+            <a href="#" class="menu-item">
+                <i class="bi bi-bar-chart"></i>
+                <span>Bid Statistic</span>
+            </a>
+        </div>
+        
+        <div class="user-info">
+            <div class="sidebar-footer mt-auto">
+                <div class="user-label">Logged in as</div>
+                <div class="d-flex align-items-center gap-3 mt-2">
+                    <div class="user-avatar">A</div>
+                    <div class="user-details">
+                        <h6>Administrator</h6>
+                        <p>Ceypetco</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Header -->
+        <div class="top-header">
+            <h1 class="page-title">Workflow Collection</h1>
+            <p class="page-subtitle">E-PROCUREMENT PIPELINE MANAGEMENT</p>
+        </div>
+        
+        <!-- Content Area -->
+        <div class="content-area">
+            <!-- Tab Switcher -->
+            <div class="d-flex justify-content-between align-items-center mb-1">
+                <div class="tab-switcher">
+                    <a href="workflow-collection.html" class="tab-btn">ACTIVE BLUEPRINTS</a>
+                    <button class="tab-btn active">PENDING VERIFICATIONS</button>
+                    <a href="#" class="tab-btn">ARCHIVED</a>
+                </div>
+            </div>
+            
+            <!-- Section Title -->
+            <div class="mb-3">
+                <h3 style="font-weight: 900; color: #111827; font-size: 1.5rem;">Drafts Awaiting Governance Sign-off</h3>
+                <p style="color: #9CA3AF; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px;">VERIFICATION-READY BLUEPRINTS PENDING HIGHER-LEVEL APPROVAL</p>
+            </div>
+            
+            <!-- Category Filters -->
+            <div class="category-filters mt-4">
+                <button class="category-filter-btn active" data-category="all">
+                    <i class="bi bi-grid-3x3-gap"></i>
+                    ALL CATEGORIES
+                </button>
+                <button class="category-filter-btn" data-category="tender-details">
+                    <i class="bi bi-shield-check"></i>
+                    TENDER DETAILS
+                </button>
+                <button class="category-filter-btn" data-category="tender-document">
+                    <i class="bi bi-file-earmark-text"></i>
+                    TENDER DOCUMENT
+                </button>
+                <button class="category-filter-btn" data-category="tender-evaluation">
+                    <i class="bi bi-sliders"></i>
+                    TENDER EVALUATION
+                </button>
+            </div>
+            
+            <!-- Content Sections -->
+            
+            <!-- All Categories View -->
+            <div id="all-content" class="content-section active">
+                <div class="workflow-grid">
+                    <!-- Workflow Card 1 -->
+                    <div class="workflow-card" data-category="tender-details">
+                        <span class="badge-status badge-pending">PENDING</span>
+                        <div class="workflow-icon">
+                            <i class="bi bi-shield-check"></i>
+                        </div>
+                        <div style="position: absolute; top: 4rem; right: 1.5rem; font-size: 0.65rem; color: #9CA3AF; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">DETAILS PROCESS</div>
+                        <div class="workflow-category">TENDER DETAILS VERIFICATION</div>
+                        <h3 class="workflow-name">West-Terminal Spot Protocol</h3>
+                        <p class="workflow-description">"New technical clearance logic pending higher-level verification for West-Terminal operations."</p>
+                        <div class="workflow-footer">
+                            <div class="footer-info">
+                                <div class="footer-info-item">
+                                    LOGIC NODES
+                                    <strong>3 Approval Steps</strong>
+                                </div>
+                                <div class="footer-info-item">
+                                    LAST VERSION
+                                    <strong>2026-01-20</strong>
+                                </div>
+                            </div>
+                            <div class="workflow-actions">
+                                <button class="workflow-action-btn" title="View Details">
+                                    <i class="bi bi-stack"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Workflow Card 2 -->
+                    <div class="workflow-card" data-category="tender-details">
+                        <span class="badge-status badge-pending">PENDING</span>
+                        <div class="workflow-icon">
+                            <i class="bi bi-shield-check"></i>
+                        </div>
+                        <div style="position: absolute; top: 4rem; right: 1.5rem; font-size: 0.65rem; color: #9CA3AF; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">DETAILS PROCESS</div>
+                        <div class="workflow-category">TENDER DETAILS VERIFICATION</div>
+                        <h3 class="workflow-name">Universal Governance v5 (Beta)</h3>
+                        <p class="workflow-description">"Updated baseline logic awaiting final sign-off before replacing the current v4 engine."</p>
+                        <div class="workflow-footer">
+                            <div class="footer-info">
+                                <div class="footer-info-item">
+                                    LOGIC NODES
+                                    <strong>5 Approval Steps</strong>
+                                </div>
+                                <div class="footer-info-item">
+                                    LAST VERSION
+                                    <strong>2026-01-18</strong>
+                                </div>
+                            </div>
+                            <div class="workflow-actions">
+                                <button class="workflow-action-btn" title="View Details">
+                                    <i class="bi bi-stack"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tender Details View -->
+            <div id="tender-details-content" class="content-section">
+                <div class="workflow-grid">
+                    <!-- Same 2 cards as all categories -->
+                    <div class="workflow-card">
+                        <span class="badge-status badge-pending">PENDING</span>
+                        <div class="workflow-icon">
+                            <i class="bi bi-shield-check"></i>
+                        </div>
+                        <div style="position: absolute; top: 4rem; right: 1.5rem; font-size: 0.65rem; color: #9CA3AF; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">DETAILS PROCESS</div>
+                        <div class="workflow-category">TENDER DETAILS VERIFICATION</div>
+                        <h3 class="workflow-name">West-Terminal Spot Protocol</h3>
+                        <p class="workflow-description">"New technical clearance logic pending higher-level verification for West-Terminal operations."</p>
+                        <div class="workflow-footer">
+                            <div class="footer-info">
+                                <div class="footer-info-item">
+                                    LOGIC NODES
+                                    <strong>3 Approval Steps</strong>
+                                </div>
+                                <div class="footer-info-item">
+                                    LAST VERSION
+                                    <strong>2026-01-20</strong>
+                                </div>
+                            </div>
+                            <div class="workflow-actions">
+                                <button class="workflow-action-btn" title="View Details">
+                                    <i class="bi bi-stack"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="workflow-card">
+                        <span class="badge-status badge-pending">PENDING</span>
+                        <div class="workflow-icon">
+                            <i class="bi bi-shield-check"></i>
+                        </div>
+                        <div style="position: absolute; top: 4rem; right: 1.5rem; font-size: 0.65rem; color: #9CA3AF; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">DETAILS PROCESS</div>
+                        <div class="workflow-category">TENDER DETAILS VERIFICATION</div>
+                        <h3 class="workflow-name">Universal Governance v5 (Beta)</h3>
+                        <p class="workflow-description">"Updated baseline logic awaiting final sign-off before replacing the current v4 engine."</p>
+                        <div class="workflow-footer">
+                            <div class="footer-info">
+                                <div class="footer-info-item">
+                                    LOGIC NODES
+                                    <strong>5 Approval Steps</strong>
+                                </div>
+                                <div class="footer-info-item">
+                                    LAST VERSION
+                                    <strong>2026-01-18</strong>
+                                </div>
+                            </div>
+                            <div class="workflow-actions">
+                                <button class="workflow-action-btn" title="View Details">
+                                    <i class="bi bi-stack"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tender Document Empty State -->
+            <div id="tender-document-content" class="content-section">
+                <div class="empty-state">
+                    <div class="empty-state-icon">
+                        <i class="bi bi-file-earmark-text"></i>
+                    </div>
+                    <h2 class="empty-state-title">NO PENDING WORKFLOWS IDENTIFIED</h2>
+                    <p class="empty-state-description">
+                        Clear your category filters or switch status tabs to see other defined procurement pipelines.
+                    </p>
+                    <button class="btn-secondary-custom" data-category="all">CLEAR CATEGORY FILTER</button>
+                </div>
+            </div>
+            
+            <!-- Tender Evaluation Empty State -->
+            <div id="tender-evaluation-content" class="content-section">
+                <div class="empty-state">
+                    <div class="empty-state-icon">
+                        <i class="bi bi-sliders"></i>
+                    </div>
+                    <h2 class="empty-state-title">NO PENDING WORKFLOWS IDENTIFIED</h2>
+                    <p class="empty-state-description">
+                        Clear your category filters or switch status tabs to see other defined procurement pipelines.
+                    </p>
+                    <button class="btn-secondary-custom" data-category="all">CLEAR CATEGORY FILTER</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="main-footer">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="text-muted small">
+                    © 2024 PetroProcure. All rights reserved.
+                </div>
+                <div class="text-muted small">
+                    Version 2.0 | Last Updated: <span id="currentDate"></span>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Set current date
+        document.getElementById('currentDate').textContent = new Date().toLocaleDateString();
+
+        // Maintenance submenu toggle
+        const maintenanceToggle = document.getElementById('maintenanceToggle');
+        const maintenanceSubmenu = document.getElementById('maintenanceSubmenu');
+        
+        if (maintenanceToggle && maintenanceSubmenu) {
+            maintenanceToggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                maintenanceSubmenu.classList.toggle('show');
+                maintenanceToggle.classList.toggle('expanded');
+            });
+        }
+        
+        // Workflow submenu toggle
+        const workflowToggle = document.getElementById('workflowToggle');
+        const workflowSubmenu = document.getElementById('workflowSubmenu');
+        
+        if (workflowToggle && workflowSubmenu) {
+            workflowToggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                workflowSubmenu.classList.toggle('show');
+                workflowToggle.classList.toggle('expanded');
+            });
+        }
+        
+        // Tender submenu toggle
+        const TenderToggle = document.getElementById('TenderToggle');
+        const TenderSubmenu = document.getElementById('TenderSubmenu');
+        if (TenderToggle && TenderSubmenu) {
+            TenderToggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                TenderSubmenu.classList.toggle('show');
+                TenderToggle.classList.toggle('expanded');
+            });
+        }
+        
+        // Category filter functionality
+        const categoryButtons = document.querySelectorAll('.category-filter-btn');
+        const contentSections = {
+            'all': document.getElementById('all-content'),
+            'tender-details': document.getElementById('tender-details-content'),
+            'tender-document': document.getElementById('tender-document-content'),
+            'tender-evaluation': document.getElementById('tender-evaluation-content')
+        };
+        
+        categoryButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Update button states
+                categoryButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                // Get selected category
+                const category = button.dataset.category;
+                
+                // Hide all content sections
+                Object.values(contentSections).forEach(section => {
+                    section.classList.remove('active');
+                });
+                
+                // Show selected content section
+                if (contentSections[category]) {
+                    contentSections[category].classList.add('active');
+                }
+            });
+        });
+        
+        // Clear filter buttons
+        const clearFilterButtons = document.querySelectorAll('.btn-secondary-custom');
+        clearFilterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Reset to all categories
+                categoryButtons.forEach(btn => btn.classList.remove('active'));
+                categoryButtons[0].classList.add('active'); // First button is "ALL CATEGORIES"
+                
+                // Show all content
+                Object.values(contentSections).forEach(section => {
+                    section.classList.remove('active');
+                });
+                contentSections['all'].classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

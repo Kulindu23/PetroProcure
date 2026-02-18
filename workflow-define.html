@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Define Workflow - PetroProcure</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-indigo: #4F46E5;
+            --success-emerald: #10B981;
+            --warning-amber: #F59E0B;
+            --danger-rose: #F43F5E;
+            --surface-bg: #F8FAFC;
+            --sidebar-width: 270px;
+        }
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            background-color: var(--surface-bg);
+            font-weight: 500;
+        }
+        
+        /* Sidebar Styles - Same as before */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: var(--sidebar-width);
+            background-color: #FFFFFF;
+            border-right: 1px solid #E5E7EB;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar-logo {
+            padding: 1.5rem 1rem;
+            border-bottom: 1px solid #E5E7EB;
+        }
+        
+        .sidebar-logo h5 {
+            font-weight: 900;
+            color: var(--primary-indigo);
+            margin: 0;
+            font-size: 1.1rem;
+        }
+        
+        .sidebar-logo p {
+            font-size: 0.7rem;
+            color: #9CA3AF;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .sidebar-menu {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem 0;
+        }
+        
+        .menu-item {
+            padding: 0.75rem 1rem;
+            color: #6B7280;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.2s;
+            margin: 0.25rem 0.5rem;
+            border-radius: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .menu-item:hover {
+            background-color: #F3F4F6;
+            color: var(--primary-indigo);
+        }
+        
+        .menu-item.active {
+            background-color: #EEF2FF;
+            color: var(--primary-indigo);
+            font-weight: 600;
+        }
+        
+        .menu-item i {
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            padding-left: 2.5rem;
+        }
+        
+        .submenu.show {
+            max-height: 500px;
+        }
+        
+        .menu-item i.bi-chevron-down {
+            transition: transform 0.3s ease;
+        }
+        
+        .menu-item.expanded i.bi-chevron-down {
+            transform: rotate(180deg);
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .top-header {
+            background-color: #FFFFFF;
+            border-bottom: 1px solid #E5E7EB;
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
+        
+        .page-title {
+            font-weight: 900;
+            color: #111827;
+            margin: 0;
+            font-size: 1.75rem;
+        }
+        
+        .page-subtitle {
+            color: #9CA3AF;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin: 0;
+        }
+        
+        /* Content Area */
+        .content-area {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1400px;
+        }
+        
+        /* Form Section */
+        .form-section {
+            background: #FFFFFF;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-number {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--primary-indigo), #6366F1);
+            color: white;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        
+        .section-title {
+            font-weight: 700;
+            color: #111827;
+            font-size: 1.1rem;
+            margin: 0;
+        }
+        
+        .section-subtitle {
+            color: #6B7280;
+            font-size: 0.85rem;
+            margin: 0;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-control, .form-select {
+            border-radius: 0.75rem;
+            border: 1px solid #E5E7EB;
+            padding: 0.75rem 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-indigo);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+        
+        .info-box {
+            background: #F9FAFB;
+            border-left: 3px solid var(--primary-indigo);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .info-box p {
+            margin: 0;
+            font-size: 0.85rem;
+            color: #6B7280;
+            line-height: 1.5;
+        }
+        
+        /* Steps Section */
+        .steps-container {
+            margin-top: 2rem;
+        }
+        
+        .step-card {
+            background: #FFFFFF;
+            border: 1px solid #E5E7EB;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s;
+        }
+        
+        .step-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        
+        .step-header {
+            display: flex;
+            align-items: start;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: #111827;
+            color: white;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .step-title-group h4 {
+            font-weight: 700;
+            font-size: 1rem;
+            color: #111827;
+            margin: 0 0 0.25rem 0;
+        }
+        
+        .step-category {
+            font-size: 0.75rem;
+            color: #9CA3AF;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin: 0;
+        }
+        
+        .step-body {
+            padding-left: 3.5rem;
+        }
+        
+        .governance-role-tag {
+            display: inline-block;
+            padding: 0.35rem 0.75rem;
+            background: #EEF2FF;
+            color: var(--primary-indigo);
+            border-radius: 0.5rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .step-threshold {
+            background: linear-gradient(135deg, #EEF2FF, #E0E7FF);
+            padding: 1rem;
+            border-radius: 0.75rem;
+            margin-top: 1rem;
+        }
+        
+        .threshold-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .threshold-header i {
+            color: var(--primary-indigo);
+        }
+        
+        .threshold-header span {
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: #111827;
+        }
+        
+        .threshold-content {
+            font-size: 0.85rem;
+            color: #6B7280;
+            line-height: 1.5;
+        }
+        
+        /* Toggle Switch */
+        .form-switch .form-check-input {
+            width: 48px;
+            height: 24px;
+            cursor: pointer;
+        }
+        
+        .form-switch .form-check-input:checked {
+            background-color: var(--primary-indigo);
+            border-color: var(--primary-indigo);
+        }
+        
+        /* Buttons */
+        .btn-primary-custom {
+            background: linear-gradient(135deg, var(--primary-indigo), #6366F1);
+            border: none;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(79, 70, 229, 0.2);
+        }
+        
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+        }
+        
+        .btn-secondary-custom {
+            background: #F3F4F6;
+            border: none;
+            color: #6B7280;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-secondary-custom:hover {
+            background: #E5E7EB;
+            color: #374151;
+        }
+        
+        /* User Info */
+        .user-info {
+            background-color: #F9FAFB;
+            padding: 1rem;
+            margin: 0 0.5rem 1rem 0.5rem;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-shrink: 0;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-indigo), #7C3AED);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+        }
+        
+        .user-details h6 {
+            margin: 0;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #111827;
+        }
+        
+        .user-details p {
+            margin: 0;
+            font-size: 0.75rem;
+            color: #6B7280;
+        }
+        
+        /* Footer */
+        .main-footer {
+            background-color: #FFFFFF;
+            border-top: 1px solid #E5E7EB;
+            padding: 1.5rem 2rem;
+            margin-top: auto;
+        }
+        
+        .alert-error {
+            background: #FEE2E2;
+            border: 1px solid #FCA5A5;
+            color: #991B1B;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+        
+        .alert-error.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            <div class="d-flex align-items-center gap-2">
+                <div class="bg-primary text-white rounded-3 p-2" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
+                    <strong style="font-size: 0.9rem;">PP</strong>
+                </div>
+                <div>
+                    <h5>PetroProcure</h5>
+                    <p>E-PROCUREMENT V2</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="sidebar-menu">
+            <a href="#" class="menu-item">
+                <i class="bi bi-grid"></i>
+                <span>Dashboard</span>
+            </a>
+            
+            <a href="#" class="menu-item">
+                <i class="bi bi-shield-check"></i>
+                <span>Accessibility</span>
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            
+            <a href="#" class="menu-item">
+                <i class="bi bi-wrench"></i>
+                <span>Maintenance</span>
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            
+            <a href="#" class="menu-item expanded" id="workflowToggle">
+                <i class="bi bi-gear"></i>
+                <span>Workflow</span>
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            
+            <div class="submenu show" id="workflowSubmenu">
+                <a href="workflow-collection.html" class="menu-item">
+                    <i class="bi bi-list-ul"></i>
+                    <span>Workflow Collection</span>
+                </a>
+                <a href="workflow-define.html" class="menu-item active">
+                    <i class="bi bi-pencil-square"></i>
+                    <span>Define New Workflow</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="bi bi-check-circle"></i>
+                    <span>Verify Workflow</span>
+                </a>
+            </div>
+            
+            <a href="#" class="menu-item">
+                <i class="bi bi-file-earmark-text"></i>
+                <span>Tender</span>
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            
+            <a href="#" class="menu-item">
+                <i class="bi bi-check2-square"></i>
+                <span>Verification Processes</span>
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            
+            <a href="#" class="menu-item">
+                <i class="bi bi-bar-chart"></i>
+                <span>Bid Statistic</span>
+            </a>
+        </div>
+        
+        <div class="user-info">
+            <div class="user-avatar">A</div>
+            <div class="user-details">
+                <h6>Administrator</h6>
+                <p>Ceypetco</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Header -->
+        <div class="top-header">
+            <h1 class="page-title">Create Workflow</h1>
+            <p class="page-subtitle">E-PROCUREMENT PIPELINE MANAGEMENT</p>
+        </div>
+        
+        <!-- Content Area -->
+        <div class="content-area">
+            <form id="workflowForm">
+                <!-- Alert Error -->
+                <div class="alert-error" id="alertError">
+                    <strong><i class="bi bi-exclamation-triangle me-2"></i>Error:</strong>
+                    <span id="errorMessage">Please fill in all required fields.</span>
+                </div>
+                
+                <!-- Section 1: Define Workflow -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="section-number">1</div>
+                            <div>
+                                <h3 class="section-title">Define Workflow</h3>
+                                <p class="section-subtitle">BLUEPRINT APPROVAL HIERARCHIES</p>
+                            </div>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="workflowActive" checked>
+                            <label class="form-check-label text-muted small" for="workflowActive">Active</label>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Structural Logic & Compatibility</label>
+                        <p class="text-muted small mb-2">Define where this logic application</p>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">TENDER LIFECYCLE CATEGORY <span class="text-danger">*</span></label>
+                                <select class="form-select" id="lifecycleCategory" required>
+                                    <option value="">Select category...</option>
+                                    <option value="tender-details">Tender Details Verification</option>
+                                    <option value="tender-document">Tender Document Verification Process</option>
+                                    <option value="tender-evaluation">Tender Evaluation Verification Process</option>
+                                </select>
+                                <div class="info-box">
+                                    <p><strong>OPERATIONAL DESCRIPTION:</strong> The workflow must run approval process for high-value refined petroleum tenders. Required multiple level of commercial and technical sign-off.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">WORKFLOW NAME <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="workflowName" placeholder="e.g., Refined & Crude" required>
+                                <div class="info-box">
+                                    <p><strong>AUTOMATION PURPOSE & JUSTIFICATION FOR ANSWERS:</strong> Applies hard to new rule if CODE and budget 1m using next to rights validation checkpoint. The workflow does not apply and fast forward. No need for extra layer confirmation.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="form-label">APPLICABLE PRODUCT TYPE</label>
+                                <select class="form-select" id="productType">
+                                    <option value="">Select type...</option>
+                                    <option value="refined-crude">Refined & Crude</option>
+                                    <option value="single-item">Single & Item</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label">APPLICABLE PRIMARY LOGIC</label>
+                                <select class="form-select" id="primaryLogic">
+                                    <option value="">Select logic...</option>
+                                    <option value="single-item">Single & Item</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Section 2: Sequential Steps -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="section-number">2</div>
+                            <div>
+                                <h3 class="section-title">SEQUENTIAL STEPS</h3>
+                                <p class="section-subtitle">MULTI-LAYER VERIFICATION CHECKPOINTS</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="steps-container">
+                        <!-- Step 1 -->
+                        <div class="step-card">
+                            <div class="step-header">
+                                <div class="step-number">1</div>
+                                <div class="step-title-group flex-grow-1">
+                                    <h4>STEP TITLE: Commercial Verification</h4>
+                                    <p class="step-category">STEP CATEGORY: APPROVAL</p>
+                                </div>
+                            </div>
+                            
+                            <div class="step-body">
+                                <div class="mb-3">
+                                    <label class="form-label">TARGET GOVERNANCE ROLE <span class="text-danger">*</span></label>
+                                    <div>
+                                        <span class="governance-role-tag">Commercial verification (COM_GRP_04)</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="form-label">REQUIRE AUTOMATED USERS/ROLE ASSIGNED</label>
+                                        <select class="form-select">
+                                            <option value="">Select count...</option>
+                                            <option value="1">1 User</option>
+                                            <option value="multiple">Multiple Users</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="step-threshold">
+                                    <div class="threshold-header">
+                                        <i class="bi bi-sliders"></i>
+                                        <span>SIGNATURE THRESHOLD</span>
+                                    </div>
+                                    <div class="threshold-content">
+                                        <p class="mb-2"><strong>Step 1: Commercial verification (CM/DCM)</strong></p>
+                                        <p class="mb-0">Only the Commercial verification (CM/DCM) can progress this step.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 2 -->
+                        <div class="step-card">
+                            <div class="step-header">
+                                <div class="step-number">2</div>
+                                <div class="step-title-group flex-grow-1">
+                                    <h4>STEP TITLE: TC Member Verification</h4>
+                                    <p class="step-category">STEP CATEGORY: REVIEW & APPROVAL</p>
+                                </div>
+                            </div>
+                            
+                            <div class="step-body">
+                                <div class="mb-3">
+                                    <label class="form-label">TARGET GOVERNANCE ROLE <span class="text-danger">*</span></label>
+                                    <div>
+                                        <span class="governance-role-tag">TC Committee Members (TC_MEMBER)</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Select Desired</label>
+                                        <select class="form-select">
+                                            <option value="">Select count...</option>
+                                            <option value="2" selected>2</option>
+                                            <option value="3">3</option>
+                                            <option value="5">5</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Select Board</label>
+                                        <div class="d-flex gap-2">
+                                            <button type="button" class="btn btn-sm btn-primary-custom">Central Secretary</button>
+                                            <button type="button" class="btn btn-sm btn-secondary-custom">Board Only</button>
+                                            <button type="button" class="btn btn-sm btn-secondary-custom">Board Verify</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="step-threshold">
+                                    <div class="threshold-header">
+                                        <i class="bi bi-sliders"></i>
+                                        <span>SIGNATURE THRESHOLD</span>
+                                    </div>
+                                    <div class="threshold-content">
+                                        <p class="mb-2"><strong>Step 2: TC Committee Member of approval requires from designated committee.</strong></p>
+                                        <p class="mb-0">Voting the minimum number of approval requires from designated committee. Only TC Committee Submission could move to required level.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 3 -->
+                        <div class="step-card">
+                            <div class="step-header">
+                                <div class="step-number">3</div>
+                                <div class="step-title-group flex-grow-1">
+                                    <h4>STEP TITLE: TC Chairman Verification</h4>
+                                    <p class="step-category">STEP CATEGORY: REVIEW & APPROVAL</p>
+                                </div>
+                            </div>
+                            
+                            <div class="step-body">
+                                <div class="mb-3">
+                                    <label class="form-label">TARGET GOVERNANCE ROLE <span class="text-danger">*</span></label>
+                                    <div>
+                                        <span class="governance-role-tag">TC Committee Chairman (TC_CHAIRMAN)</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="form-label">REQUIRE AUTOMATED USERS/ROLE ASSIGNED</label>
+                                        <select class="form-select">
+                                            <option value="1" selected>1 User</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="step-threshold">
+                                    <div class="threshold-header">
+                                        <i class="bi bi-sliders"></i>
+                                        <span>SIGNATURE THRESHOLD</span>
+                                    </div>
+                                    <div class="threshold-content">
+                                        <p class="mb-2"><strong>Step 3: Only TC Chairman can progress this step.</strong></p>
+                                        <p class="mb-0">Voting the minimum number of approval requires from designated committee. Only TC Committee Chairman submission could move to required level.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 4 -->
+                        <div class="step-card">
+                            <div class="step-header">
+                                <div class="step-number">4</div>
+                                <div class="step-title-group flex-grow-1">
+                                    <h4>STEP TITLE: SHLPC Member Verification</h4>
+                                    <p class="step-category">STEP CATEGORY: REVIEW & APPROVAL</p>
+                                </div>
+                            </div>
+                            
+                            <div class="step-body">
+                                <div class="mb-3">
+                                    <label class="form-label">TARGET GOVERNANCE ROLE <span class="text-danger">*</span></label>
+                                    <div>
+                                        <span class="governance-role-tag">SHLPC Committee Members (SHLPC_MEMBER)</span>
+                                        <span class="governance-role-tag">SHLPC Ministry (SHLPC_MINI_MEMBER)</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Select Desired</label>
+                                        <select class="form-select">
+                                            <option value="">Select count...</option>
+                                            <option value="5" selected>5</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Also Verify</label>
+                                        <input type="text" class="form-control" value="Central Ministry" readonly>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <label class="form-label">Board Verify</label>
+                                        <div class="d-flex gap-2">
+                                            <button type="button" class="btn btn-sm btn-primary-custom">Regular</button>
+                                            <button type="button" class="btn btn-sm btn-secondary-custom">Latest Update</button>
+                                            <button type="button" class="btn btn-sm btn-secondary-custom">Board Decline</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="step-threshold">
+                                    <div class="threshold-header">
+                                        <i class="bi bi-sliders"></i>
+                                        <span>SIGNATURE THRESHOLD</span>
+                                    </div>
+                                    <div class="threshold-content">
+                                        <p class="mb-2"><strong>Step 4: Approval requires from designated committee from SHLPC Committee Members and from SHLPC Committee Ministry when it progress this step.</strong></p>
+                                        <p class="mb-0">Voting the minimum number of approval requires from designated committee. Only SHLPC Committee Submission progress this step.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 5 -->
+                        <div class="step-card">
+                            <div class="step-header">
+                                <div class="step-number">5</div>
+                                <div class="step-title-group flex-grow-1">
+                                    <h4>STEP TITLE: SHLPC Chairman Verification</h4>
+                                    <p class="step-category">STEP CATEGORY: FINAL APPROVAL</p>
+                                </div>
+                            </div>
+                            
+                            <div class="step-body">
+                                <div class="mb-3">
+                                    <label class="form-label">TARGET GOVERNANCE ROLE <span class="text-danger">*</span></label>
+                                    <div>
+                                        <span class="governance-role-tag">SHLPC Committee Chairman (SHLPC_CHAIRMAN)</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="form-label">REQUIRE AUTOMATED USERS/ROLE ASSIGNED</label>
+                                        <select class="form-select">
+                                            <option value="1" selected>1 User</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="step-threshold">
+                                    <div class="threshold-header">
+                                        <i class="bi bi-sliders"></i>
+                                        <span>SIGNATURE THRESHOLD</span>
+                                    </div>
+                                    <div class="threshold-content">
+                                        <p class="mb-2"><strong>Step 5: Only SHLPC Committee Chairman can finalize the step.</strong></p>
+                                        <p class="mb-0">Voting the minimum number of approval requires from designated committee. Only SHLPC Committee Chairman required to progress the final step.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 6 -->
+                        <div class="step-card">
+                            <div class="step-header">
+                                <div class="step-number">6</div>
+                                <div class="step-title-group flex-grow-1">
+                                    <h4>STEP TITLE: Commercial Review & Publication</h4>
+                                    <p class="step-category">STEP CATEGORY: REVIEW & APPROVAL</p>
+                                </div>
+                            </div>
+                            
+                            <div class="step-body">
+                                <div class="mb-3">
+                                    <label class="form-label">TARGET GOVERNANCE ROLE <span class="text-danger">*</span></label>
+                                    <div>
+                                        <span class="governance-role-tag">Commercial verification (COM_GRP_04)</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="form-label">REQUIRE AUTOMATED USERS/ROLE ASSIGNED</label>
+                                        <select class="form-select">
+                                            <option value="1" selected>1 User</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="step-threshold">
+                                    <div class="threshold-header">
+                                        <i class="bi bi-sliders"></i>
+                                        <span>SIGNATURE THRESHOLD</span>
+                                    </div>
+                                    <div class="threshold-content">
+                                        <p class="mb-2"><strong>Step 6: Only Commercial verification (CM/DCM) going to public this step.</strong></p>
+                                        <p class="mb-0">After the SHLPC chairman finalize approval, only CM going to submit the process and going to public the step.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Form Actions -->
+                <div class="d-flex justify-content-end gap-3 mb-4">
+                    <a href="workflow-collection.html" class="btn btn-secondary-custom">
+                        <i class="bi bi-x-circle me-2"></i>
+                        Cancel
+                    </a>
+                    <button type="submit" class="btn btn-primary-custom">
+                        <i class="bi bi-check-circle me-2"></i>
+                        Submit for Verification
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="main-footer">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="text-muted small">
+                    © 2024 PetroProcure. All rights reserved.
+                </div>
+                <div class="text-muted small">
+                    Version 2.0 | Last Updated: <span id="currentDate"></span>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Set current date
+        document.getElementById('currentDate').textContent = new Date().toLocaleDateString();
+        
+        // Workflow submenu toggle
+        const workflowToggle = document.getElementById('workflowToggle');
+        const workflowSubmenu = document.getElementById('workflowSubmenu');
+        
+        if (workflowToggle && workflowSubmenu) {
+            workflowToggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                workflowSubmenu.classList.toggle('show');
+                workflowToggle.classList.toggle('expanded');
+            });
+        }
+        
+        // Form validation
+        const workflowForm = document.getElementById('workflowForm');
+        const alertError = document.getElementById('alertError');
+        const errorMessage = document.getElementById('errorMessage');
+        
+        workflowForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Get required fields
+            const lifecycleCategory = document.getElementById('lifecycleCategory').value;
+            const workflowName = document.getElementById('workflowName').value;
+            
+            // Validate
+            if (!lifecycleCategory || !workflowName) {
+                alertError.classList.add('show');
+                errorMessage.textContent = 'Please fill in all required fields marked with *';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return;
+            }
+            
+            // Check if workflow name is empty or only whitespace
+            if (workflowName.trim() === '') {
+                alertError.classList.add('show');
+                errorMessage.textContent = 'Workflow name cannot be empty or contain only spaces.';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return;
+            }
+            
+            // Success - redirect to collection page
+            alert('Workflow submitted successfully for verification!');
+            window.location.href = 'workflow-collection.html';
+        });
+        
+        // Hide error alert when user starts typing
+        document.getElementById('lifecycleCategory').addEventListener('change', () => {
+            alertError.classList.remove('show');
+        });
+        
+        document.getElementById('workflowName').addEventListener('input', () => {
+            alertError.classList.remove('show');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Price Base Collection - PetroProcure</title>
+    
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-indigo: #4F46E5;
+            --success-emerald: #10B981;
+            --warning-amber: #F59E0B;
+            --sidebar-width: 270px;
+        }
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            background-color: #F9FAFB;
+            font-weight: 500;
+        }
+        
+        
+        .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: var(--sidebar-width);
+    background-color: #FFFFFF;
+    border-right: 1px solid #E5E7EB;
+    overflow-y: hidden;  /* CHANGED from auto to hidden */
+    z-index: 1000;
+    display: flex;  /* ADD */
+    flex-direction: column;  /* ADD */
+}
+        
+        .sidebar-logo {
+    padding: 1.5rem 1rem;
+    
+    flex-shrink: 0;  /* ADD - prevents shrinking */
+}
+        
+        .sidebar-logo h5 {
+            font-weight: 900;
+            color: #111827;
+            margin: 0;
+            font-size: 1.1rem;
+        }
+        
+        .sidebar-logo p {
+            font-size: 0.7rem;
+            color: #9CA3AF;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .sidebar-menu {
+    padding: 1rem 0;
+    flex: 1;  /* ADD - allows menu to grow and take available space */
+    overflow-y: auto;  /* ADD - makes ONLY the menu scrollable */
+    overflow-x: hidden;  /* ADD - prevents horizontal scroll */
+}
+        
+        .menu-item {
+            padding: 0.75rem 1rem;
+            color: #6B7280;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.2s;
+            margin: 0.25rem 0.5rem;
+            border-radius: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .menu-item:hover {
+            background-color: #F3F4F6;
+            color: var(--primary-indigo);
+        }
+        
+        .menu-item.active {
+            background-color: #EEF2FF;
+            color: var(--primary-indigo);
+            font-weight: 600;
+        }
+        
+        .menu-item i {
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .menu-section {
+            padding: 1rem 1rem 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #9CA3AF;
+            letter-spacing: 0.5px;
+        }
+        
+        .submenu {
+            padding-left: 2.5rem;
+        }
+        
+        .submenu .menu-item {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+        
+       
+        .main-content {
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Top Header */
+        .top-header {
+            background-color: #F9FAFB;
+            /*border-bottom: 1px solid #E5E7EB;*/
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
+        
+        .page-title {
+            font-weight: 900;
+            color: #111827;
+            margin: 0;
+            font-size: 1.75rem;
+        }
+        
+        .page-subtitle {
+            color: #9CA3AF;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin: 0;
+        }
+        
+        /* Content Area */
+        .content-area {
+            flex: 1;
+            padding: 2rem;
+        }
+        
+       
+        .tab-switcher {
+            display: inline-flex;
+            background-color: #F3F4F6;
+            border-radius: 1rem;
+            padding: 0.25rem;
+            gap: 0.25rem;
+        }
+        
+        .tab-switcher .tab-btn {
+            padding: 0.5rem 1.5rem;
+            background: transparent;
+            border: none;
+            border-radius: 0.75rem;
+            color: #6B7280;
+            font-weight: 600;
+            transition: all 0.3s;
+            cursor: pointer;
+            font-size: 0.9rem;
+            white-space: nowrap;  
+            
+        }
+
+
+
+
+      
+
+        
+        .tab-switcher .tab-btn.active {
+            background-color: #FFFFFF;
+            color: var(--primary-indigo);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        
+        .search-bar {
+            position: relative;
+        }
+        
+        .search-bar input {
+            border-radius: 1rem;
+            padding: 0.75rem 1.5rem 0.75rem 3rem;
+            border: 1px solid #E5E7EB;
+            background-color: transparent;
+            font-size: 0.95rem;
+            width: 100%;
+        }
+        
+        .search-bar i {
+            position: absolute;
+            left: 1.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #10B981;
+        }
+        
+        
+        .btn-primary-custom {
+            background: linear-gradient(135deg, var(--primary-indigo), #6366F1);
+            border: none;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+            
+        }
+        
+        
+        .price-base-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .price-base-card {
+            background: #FFFFFF;
+            border-radius: 2rem;
+            padding: 1.75rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            cursor: pointer;
+            animation: fadeInUp 0.5s ease-out;
+        }
+        
+        .price-base-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        
+        .price-base-card:hover .edit-icon {
+            opacity: 1;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .card-icon-container {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #EEF2FF, #E0E7FF);
+            border-radius: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.25rem;
+        }
+        
+        .card-icon-container i {
+            font-size: 1.75rem;
+            color: var(--primary-indigo);
+        }
+
+        .price-base-card:hover .card-icon-container {
+            background: linear-gradient(135deg, var(--primary-indigo), #6366F1);
+        }
+
+        .price-base-card:hover .card-icon-container i {
+            color: #FFFFFF;
+        }
+        
+        .badge-status {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            padding: 0.4rem 0.9rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        
+        .badge-active {
+            background-color: #4F46E5;
+            color: #F9FAFB;
+        }
+        
+        .badge-inactive {
+            background-color: #F3F4F6;
+            color: #6B7280;
+        }
+        
+        .badge-type {
+            position: absolute;
+            top: 4.2rem;
+            right: 1.5rem;
+            display: inline-block;
+            background-color: transparent;
+            color: #6B7280;
+            padding: 0;
+            border-radius: 0;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 0;
+        }
+        
+        .price-code {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--primary-indigo);
+            font-weight: 600;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .price-name {
+            font-weight: 900;
+            color: #111827;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+        }
+
+        .price-base-card:hover .price-name {
+            color: var(--primary-indigo);
+        }
+        
+       .card-description {
+    font-size: 0.85rem;
+    color: #6B7280;
+    font-style: italic;
+    margin-bottom: 1rem;
+    white-space: nowrap;  /* Keep text in single line */
+    overflow: hidden;  /* Hide overflow */
+    text-overflow: ellipsis;  /* Show ... when text is too long */
+}
+        
+        .card-footer-info {
+            border-top: 1px solid #F3F4F6;
+            padding-top: 1rem;
+            font-size: 0.75rem;
+            color: #9CA3AF;
+        }
+
+        .card-footer-info b {
+            color: #000000;
+        }
+        
+        .edit-icon {
+            position: absolute;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #E5E7EB, #D1D5DB);
+            color: #9CA3AF;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: all 0.3s;
+        }
+        
+        
+
+.user-info {
+    background-color: #F9FAFB;
+    padding: 1rem 1rem;
+    margin: 0;  /* CHANGED - no margin */
+    border-top: 1px solid #E5E7EB;  /* ADD - top border */
+    flex-shrink: 0;  /* ADD - prevents shrinking */
+    width: 100%;  /* ADD - full width */
+    border-radius: 5rem;
+}
+
+.logged-in-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: #9CA3AF;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 80%;
+    background: linear-gradient(135deg, var(--primary-indigo), #7C3AED);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.user-details h6 {
+    margin: 0;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #111827;
+}
+
+.user-details p {
+    margin: 0;
+    font-size: 0.75rem;
+    color: #6B7280;
+}
+ 
+    /* Custom scrollbar for sidebar menu only */
+.sidebar-menu::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar-menu::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar-menu::-webkit-scrollbar-thumb {
+    background: #D1D5DB;
+    border-radius: 3px;
+}
+
+.sidebar-menu::-webkit-scrollbar-thumb:hover {
+    background: #9CA3AF;
+}
+
+        
+        /* Footer */
+        .main-footer {
+            background-color: #F8FAFC;
+            
+            padding: 1.5rem 2rem;
+            margin-top: auto;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+            
+            .sidebar.show {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .price-base-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Submenu hidden by default */
+.submenu {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+.submenu.show {
+    max-height: 500px; /* Adjust based on content */
+    transition: max-height 0.3s ease-in;
+}
+
+/* Chevron rotation */
+.menu-item i.bi-chevron-down {
+    transition: transform 0.3s ease;
+}
+
+.menu-item.expanded i.bi-chevron-down {
+    transform: rotate(180deg);
+}
+
+/* Mobile Menu Toggle Button */
+.mobile-menu-toggle {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 1001;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background-color: #111827;
+    border: none;
+    color: white;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transition: all 0.3s;
+}
+
+.mobile-menu-toggle:hover {
+    background-color: var(--primary-indigo);
+    transform: scale(1.05);
+}
+
+.mobile-menu-toggle i {
+    font-size: 1.5rem;
+}
+
+/* Change icon when sidebar is open */
+.mobile-menu-toggle.active i:before {
+    content: "\f659"; /* Bootstrap icon code for X */
+}
+
+Sidebar overlay for mobile 
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.sidebar-overlay.show {
+    display: block;
+    opacity: 1;
+}
+
+/* Update responsive styles */
+@media (max-width: 768px) {
+    .mobile-menu-toggle {
+        display: flex;
+    }
+    
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s;
+        z-index: 1000;
+    }
+    
+    .sidebar.show {
+        transform: translateX(0);
+        box-shadow: 4px 0 12px rgba(0,0,0,0.2);
+    }
+    
+    .main-content {
+        margin-left: 0;
+    }
+    
+    /* Adjust header when menu is visible */
+    .top-header {
+        padding-left: 4rem;
+    }
+}
+
+/* Desktop - always show sidebar */
+@media (min-width: 769px) {
+    .mobile-menu-toggle {
+        display: none !important;
+    }
+    
+    .sidebar {
+        transform: translateX(0) !important;
+    }
+}
+
+    </style>
+</head>
+<body>
+
+    <!-- Mobile Menu Toggle Button -->
+    <button class="mobile-menu-toggle" id="mobileMenuToggle">
+        <i class="bi bi-list"></i>
+    </button>
+    
+    
+
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            <div class="d-flex align-items-center gap-2">
+                <div class="bg-primary text-white rounded-3 p-2" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
+                    <strong style="font-size: 0.9rem;">PP</strong>
+                </div>
+                <div>
+                    <h5>PetroProcure</h5>
+                    <p>E-PROCUREMENT V2</p>
+                </div>
+            </div>
+        </div>
+        
+    <div class="sidebar-menu">
+            <a href="#" class="menu-item">
+                <i class="bi bi-grid"></i>
+                <span>Dashboard</span>
+            </a>
+                
+<a href="#" class="menu-item" id="maintenanceToggle">
+    <i class="bi bi-wrench"></i>
+    <span>Maintenance</span>
+    <i class="bi bi-chevron-down ms-auto" id="maintenanceChevron"></i>
+</a>
+
+<div class="submenu" id="maintenanceSubmenu">
+    <a href="product-category-list.html" class="menu-item">
+        <i class="bi bi-layers"></i>
+        <span>Product Category</span>
+    </a>
+    <a href="price-base-list.html" class="menu-item active">
+        <i class="bi bi-database"></i>
+        <span>Price Base</span>
+    </a>
+    <a href="#" class="menu-item">
+        <i class="bi bi-box"></i>
+        <span>Product</span>
+    </a>
+    <a href="#" class="menu-item">
+        <i class="bi bi-gear"></i>
+        <span>Product Specification</span>
+    </a>
+    <a href="#" class="menu-item">
+        <i class="bi bi-pin-map"></i>
+        <span>Local Agent</span>
+    </a>
+    <a href="#" class="menu-item">
+        <i class="bi bi-building"></i>
+        <span>Supplier</span>
+    </a>
+    <a href="#" class="menu-item">
+        <i class="bi bi-shield-check"></i>
+        <span>GTC</span>
+    </a>
+</div>
+
+
+
+                
+           
+            
+            <a href="#" class="menu-item expanded" id="workflowToggle">
+                <i class="bi bi-gear"></i>
+                <span>Workflow</span>
+                <i class="bi bi-chevron-down ms-auto" ></i>
+            </a>
+            
+                <div class="submenu show" id="workflowSubmenu">
+                    <!-- submenu items -->
+                    <a href="workflow-collection.html" class="menu-item">
+                        <i class="bi bi-list-ul"></i>
+                        <span>Workflow Collection</span>
+                    </a>
+                    <a href="workflow-define.html" class="menu-item">
+                        <i class="bi bi-pencil-square"></i>
+                        <span>Define Workflow</span>
+                    </a>
+                    <a href="#" class="menu-item">
+                        <i class="bi bi-check-circle"></i>
+                        <span>Verify Workflow</span>
+                    </a>
+                    
+                </div>
+            
+            <a href="#" class="menu-item">
+                <i class="bi bi-file-earmark-text"></i>
+                <span>Tender</span>
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            
+            <a href="#" class="menu-item">
+                <i class="bi bi-check2-square"></i>
+                <span>Verification Processes</span>
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            
+         
+            
+            <a href="#" class="menu-item">
+                <i class="bi bi-bar-chart"></i>
+                <span>Bid Statistic</span>
+            </a>
+        </div>
+        
+        <!--<div class="user-info"> 
+            <div class="user-avatar"></div>
+            <div class="user-details">
+                <h6>Administrator</h6>
+                <p>Ceypetco</p>
+            </div>
+        </div>--> 
+
+
+    <div class="user-info">
+        <div class="logged-in-label">LOGGED IN AS</div>
+        <div class="d-flex align-items-center gap-3 mt-2">
+            <div class="user-avatar"></div>
+            <div class="user-details">
+                <h6>Administrator</h6>
+                <p>Ceypetco</p>
+            </div>
+        </div>
+    </div>
+   
+
+
+
+    </div>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+
+
+    
+    
+    
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Header -->
+        <div class="top-header">
+            <h1 class="page-title">Price Base</h1>
+            <p class="page-subtitle">E-PROCUREMENT PIPELINE MANAGEMENT</p>
+        </div>
+        
+        <!-- Content Area -->
+        <div class="content-area">
+            <!-- Control Bar -->
+           <!-- Control Bar -->
+
+<div class="row align-items-center mb-4">
+    <div class="col-md-4">
+        <div class="tab-switcher">
+            <button class="tab-btn active" data-filter="all">ALL PRICE BASES</button> 
+            <button class="tab-btn" data-filter="active">ACTIVE</button>
+            <button class="tab-btn" data-filter="inactive">INACTIVE</button>
+        </div>
+    </div>
+    <div class="col-md-4 ps-md-5" >
+        <div class="search-bar">
+            <i class="bi bi-search"></i>
+            <input type="text" class="form-control" placeholder="Search code or name..." id="searchInput">
+        </div>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="price-base-create.html" class="btn-primary-custom text-decoration-none">
+            <i class="bi bi-plus"></i>
+            Create Price Base
+        </a>
+    </div>
+</div>
+            
+            <!-- Price Base Cards Grid -->
+            <div class="price-base-grid" id="priceBaseGrid">
+                <!-- Card 1 - Active -->
+                <div class="price-base-card" data-status="active" onclick="window.location.href='price-base-details.html'">
+                    <span class="badge-status badge-active">ACTIVE</span>
+                    <div class="card-icon-container">
+                        <i class="bi bi-database"></i>
+                    </div>
+                    <div class="badge-type">MOPS</div>
+                    <div class="price-code">PGAEY00</div>
+                    <h3 class="price-name">MOPS - GASOLINE 92 UNL</h3>
+                    <p class="card-description">"Standard market rate for Gasoline 92 Unlocked."</p>
+                    <div class="card-footer-info">
+                        <strong>LAST MODIFIED</strong><br><b>2024-01-10</b>
+                    </div>
+                    <div class="edit-icon"><a href="price-base-edit.html"><i class="bi bi-pencil"></i></a>
+                        
+                    </div>
+                </div>
+                
+                <!-- Card 2 - Active -->
+                <div class="price-base-card" data-status="active" onclick="window.location.href='price-base-details.html'">
+                    <span class="badge-status badge-active">ACTIVE</span>
+                    <div class="card-icon-container">
+                        <i class="bi bi-database"></i>
+                    </div>
+                    <div class="badge-type">MOPS</div>
+                    <div class="price-code">PGAEZ00</div>
+                    <h3 class="price-name">MOPS - GASOLINE 95 UNL</h3>
+                    <p class="card-description">"Premium unleaded market reference for 95 RON."</p>
+                    <div class="card-footer-info">
+                        <strong>LAST MODIFIED</strong><br><b>2024-02-15</b>
+                    </div>
+                    <div class="edit-icon"> <a href="price-base-edit.html"><i class="bi bi-pencil"></i></a>
+                        
+                    </div>
+                </div>
+                
+                <!-- Card 3 - Active -->
+                <div class="price-base-card" data-status="active" onclick="window.location.href='price-base-details.html'">
+                    <span class="badge-status badge-active">ACTIVE</span>
+                    <div class="card-icon-container">
+                        <i class="bi bi-database"></i>
+                    </div>
+                    <div class="badge-type">MOPAG</div>
+                    <div class="price-code">AA0VC00</div>
+                    <h3 class="price-name">MOPAG - JET A-1</h3>
+                    <p class="card-description">"Aviation turbine fuel reference for Arab Gulf markets."</p>
+                    <div class="card-footer-info">
+                        <strong>LAST MODIFIED</strong><br><b>2023-12-05</b>
+                    </div>
+                    <div class="edit-icon"> <a href="price-base-edit.html"><i class="bi bi-pencil"></i></a>
+                       
+                    </div>
+                </div>
+                
+                <!-- Card 4 - Inactive -->
+                <div class="price-base-card" data-status="inactive" onclick="window.location.href='price-base-details.html'">
+                    <span class="badge-status badge-inactive">INACTIVE</span>
+                    <div class="card-icon-container">
+                        <i class="bi bi-database"></i>
+                    </div>
+                    <div class="badge-type">MOPS</div>
+                    <div class="price-code">PYABF00</div>
+                    <h3 class="price-name">MOPS - FUEL OIL</h3>
+                    <p class="card-description">"Residual fuel oil benchmark."</p>
+                    <div class="card-footer-info">
+                        <strong>LAST MODIFIED</strong><br><b>2023-11-20</b>
+                    </div>
+                    <div class="edit-icon"> <a href="price-base-edit.html"><i class="bi bi-pencil"></i></a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="main-footer">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="text-muted small">
+                    © 2024 PetroProcure. All rights reserved.
+                </div>
+                <div class="text-muted small">
+                    Version 2.0 | Last Updated: <span id="currentDate"></span>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+   
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+   <!-- <script>
+        // Set current date
+        document.getElementById('currentDate').textContent = new Date().toLocaleDateString();
+        
+        // Tab filter functionality
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        const cards = document.querySelectorAll('.price-base-card');
+        
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Update active tab
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                // Filter cards
+                const filter = button.dataset.filter;
+                cards.forEach(card => {
+                    if (filter === 'all' || card.dataset.status === filter) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+        
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            
+            cards.forEach(card => {
+                const code = card.querySelector('.price-code').textContent.toLowerCase();
+                const name = card.querySelector('.price-name').textContent.toLowerCase();
+                
+                if (code.includes(searchTerm) || name.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        // Maintenance submenu toggle functionality
+const maintenanceToggle = document.getElementById('maintenanceToggle');
+const maintenanceSubmenu = document.getElementById('maintenanceSubmenu');
+const maintenanceChevron = document.getElementById('maintenanceChevron');
+
+// Show submenu by default since Price Base is active
+maintenanceSubmenu.classList.add('show');
+maintenanceToggle.classList.add('expanded');
+
+maintenanceToggle.addEventListener('click', (e) => {
+    e.preventDefault();
+    
+    // Toggle submenu
+    maintenanceSubmenu.classList.toggle('show');
+    maintenanceToggle.classList.toggle('expanded');
+});
+
+    </script> -->
+
+     
+    <script>
+    // Set current date
+    document.getElementById('currentDate').textContent = new Date().toLocaleDateString();
+    
+    // Mobile menu toggle
+    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+    
+    function toggleSidebar() {
+        sidebar.classList.toggle('show');
+        sidebarOverlay.classList.toggle('show');
+        mobileMenuToggle.classList.toggle('active');
+        
+        // Prevent body scroll when sidebar is open
+        if (sidebar.classList.contains('show')) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+    }
+    
+    mobileMenuToggle.addEventListener('click', toggleSidebar);
+    sidebarOverlay.addEventListener('click', toggleSidebar);
+    
+    // Maintenance submenu toggle
+    const maintenanceToggle = document.getElementById('maintenanceToggle');
+    const maintenanceSubmenu = document.getElementById('maintenanceSubmenu');
+    
+    if (maintenanceToggle && maintenanceSubmenu) {
+        // Show submenu by default since Price Base is active
+        maintenanceSubmenu.classList.add('show');
+        maintenanceToggle.classList.add('expanded');
+        
+        maintenanceToggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            maintenanceSubmenu.classList.toggle('show');
+            maintenanceToggle.classList.toggle('expanded');
+        });
+    }
+
+        // Workflow submenu toggle
+        const workflowToggle = document.getElementById('workflowToggle');
+        const workflowSubmenu = document.getElementById('workflowSubmenu');
+        
+        if (workflowToggle && workflowSubmenu) {
+            workflowToggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                workflowSubmenu.classList.toggle('show');
+                workflowToggle.classList.toggle('expanded');
+            });
+        }
+    
+    // Tab filter functionality
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const cards = document.querySelectorAll('.price-base-card');
+    
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            
+            const filter = button.dataset.filter;
+            cards.forEach(card => {
+                if (filter === 'all' || card.dataset.status === filter) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    });
+    
+    // Search functionality
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            
+            cards.forEach(card => {
+                const code = card.querySelector('.price-code').textContent.toLowerCase();
+                const name = card.querySelector('.price-name').textContent.toLowerCase();
+                
+                if (code.includes(searchTerm) || name.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    }
+</script>
+
+</body>
+</html>

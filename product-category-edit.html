@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Product Category - PetroProcure</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-indigo: #4F46E5;
+            --success-emerald: #10B981;
+            --warning-amber: #F59E0B;
+            --danger-rose: #F43F5E;
+            --surface-bg: #F8FAFC;
+            --sidebar-width: 270px;
+        }
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            background-color: var(--surface-bg);
+            font-weight: 500;
+        }
+        
+        
+        
+        
+        /* NEW CODE */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: var(--sidebar-width);
+    background-color: #FFFFFF;
+    border-right: 1px solid #E5E7EB;
+    overflow-y: auto;
+    z-index: 1000;
+    /* Sidebar is always visible - no transform */
+}
+        
+        .sidebar-logo {
+            padding: 1.5rem 1rem;
+            border-bottom: 1px solid #E5E7EB;
+        }
+        
+        .sidebar-logo h5 {
+            font-weight: 900;
+            color: var(--primary-indigo);
+            margin: 0;
+            font-size: 1.1rem;
+        }
+        
+        .sidebar-logo p {
+            font-size: 0.7rem;
+            color: #9CA3AF;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .sidebar-menu {
+            padding: 1rem 0;
+        }
+        
+        .menu-item {
+            padding: 0.75rem 1rem;
+            color: #6B7280;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.2s;
+            margin: 0.25rem 0.5rem;
+            border-radius: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .menu-item:hover {
+            background-color: #F3F4F6;
+            color: var(--primary-indigo);
+        }
+        
+        .menu-item.active {
+            background-color: #EEF2FF;
+            color: var(--primary-indigo);
+            font-weight: 600;
+        }
+        
+        .menu-item i {
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .menu-section {
+            padding: 1rem 1rem 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #9CA3AF;
+            letter-spacing: 0.5px;
+        }
+        
+        .submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            padding-left: 2.5rem;
+        }
+
+        .submenu.show {
+            max-height: 500px;
+            transition: max-height 0.3s ease-in;
+        }
+        
+        .submenu .menu-item {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        .menu-item i.bi-chevron-down {
+            transition: transform 0.3s ease;
+        }
+
+        .menu-item.expanded i.bi-chevron-down {
+            transform: rotate(180deg);
+        }
+        
+        /* NEW CODE */
+.main-content {
+    margin-left: var(--sidebar-width);  /* Always shifted */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+        /* NEW CODE */
+.top-header {
+    background-color: #FFFFFF;
+    border-bottom: 1px solid #E5E7EB;
+    padding: 1rem 2rem;  /* Removed left padding for hamburger */
+    position: sticky;
+    top: 0;
+    z-index: 999;
+}
+        
+        .back-button {
+            color: #6B7280;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+            transition: all 0.2s;
+        }
+        
+        .back-button:hover {
+            color: var(--primary-indigo);
+        }
+        
+        .page-title {
+            font-weight: 900;
+            color: #111827;
+            margin: 0;
+            font-size: 1.75rem;
+        }
+        
+        .breadcrumb-subtitle {
+            color: var(--primary-indigo);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin: 0;
+        }
+        
+        /* Content Area */
+        .content-area {
+            flex: 1;
+            padding: 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        /* Form Card */
+        .form-card {
+            background: #FFFFFF;
+            border-radius: 2rem;
+            padding: 2.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        
+        .form-group {
+            margin-bottom: 2rem;
+        }
+        
+        .form-label {
+            font-weight: 700;
+            color: #374151;
+            margin-bottom: 0.75rem;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            display: block;
+        }
+        
+        .form-label .required {
+            color: var(--danger-rose);
+            margin-left: 3px;
+        }
+        
+        .form-control {
+            border: 1px solid #D1D5DB;
+            border-radius: 0.75rem;
+            padding: 0.85rem 1rem;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-indigo);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+            outline: none;
+        }
+        
+        textarea.form-control {
+            min-height: 128px;
+            resize: vertical;
+        }
+        
+        /* Toggle Container */
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            background-color: #F9FAFB;
+            border-radius: 1rem;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 32px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #D1D5DB;
+            transition: 0.4s;
+            border-radius: 32px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 24px;
+            width: 24px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .toggle-slider {
+            background-color: var(--primary-indigo);
+        }
+        
+        input:checked + .toggle-slider:before {
+            transform: translateX(28px);
+        }
+        
+        .toggle-label-text {
+            flex: 1;
+        }
+        
+        .toggle-label-text .main-label {
+            font-weight: 700;
+            color: #111827;
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .toggle-label-text .sub-label {
+            font-size: 0.8rem;
+            color: #6B7280;
+        }
+        
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 1rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        
+        .status-badge.active {
+            background-color: #D1FAE5;
+            color: var(--success-emerald);
+        }
+        
+        /* Product Counter Cards */
+        .counter-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .counter-card {
+            padding: 1.25rem;
+            border-radius: 1rem;
+            text-align: center;
+        }
+        
+        .counter-card.active {
+            background: linear-gradient(135deg, #ECFDF5, #D1FAE5);
+        }
+        
+        .counter-card.inactive {
+            background: linear-gradient(135deg, #F8FAFC, #F1F5F9);
+        }
+        
+        .counter-label {
+            font-size: 0.7rem;
+            color: #6B7280;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .counter-value {
+            font-size: 2.25rem;
+            font-weight: 900;
+        }
+        
+        .counter-card.active .counter-value {
+            color: var(--success-emerald);
+        }
+        
+        .counter-card.inactive .counter-value {
+            color: #64748B;
+        }
+        
+        /* Warning Alert */
+        .warning-alert {
+            background-color: #FFFBEB;
+            border: 1px solid #FCD34D;
+            border-left: 4px solid var(--warning-amber);
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            margin-top: 1.5rem;
+            display: none;
+        }
+        
+        .warning-alert.show {
+            display: flex;
+            align-items: start;
+            gap: 1rem;
+        }
+        
+        .warning-alert i {
+            color: var(--warning-amber);
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+        
+        .warning-content h6 {
+            font-weight: 700;
+            color: #92400E;
+            margin: 0 0 0.5rem 0;
+            font-size: 0.95rem;
+        }
+        
+        .warning-content p {
+            color: #92400E;
+            margin: 0;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+        
+        /* Buttons */
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2.5rem;
+            padding-top: 2rem;
+            border-top: 1px solid #E5E7EB;
+        }
+        
+        .btn-secondary-custom {
+            background-color: #FFFFFF;
+            border: 1px solid #D1D5DB;
+            color: #374151;
+            padding: 0.85rem 2rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-secondary-custom:hover {
+            background-color: #F9FAFB;
+            border-color: #9CA3AF;
+        }
+        
+        .btn-primary-custom {
+            background: linear-gradient(135deg, var(--primary-indigo), #6366F1);
+            border: none;
+            color: white;
+            padding: 0.85rem 2.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn-primary-custom:active {
+            transform: scale(0.95);
+        }
+        
+        .user-info {
+            background-color: #F9FAFB;
+            padding: 1rem;
+            margin: 1rem 0.5rem;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-indigo), #7C3AED);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+        }
+        
+        .user-details h6 {
+            margin: 0;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #111827;
+        }
+        
+        .user-details p {
+            margin: 0;
+            font-size: 0.75rem;
+            color: #6B7280;
+        }
+        
+        /* Footer */
+        .main-footer {
+            background-color: #FFFFFF;
+            border-top: 1px solid #E5E7EB;
+            padding: 1.5rem 2rem;
+            margin-top: auto;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .top-header {
+                padding-left: 4rem;
+                padding-right: 1rem;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .btn-secondary-custom, .btn-primary-custom {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .counter-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+            <div class="d-flex align-items-center gap-2">
+                <div class="bg-primary text-white rounded-3 p-2" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
+                    <strong style="font-size: 0.9rem;">PP</strong>
+                </div>
+                <div>
+                    <h5>PetroProcure</h5>
+                    <p>E-PROCUREMENT V2</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="sidebar-menu">
+            <a href="#" class="menu-item">
+                <i class="bi bi-grid"></i>
+                <span>Dashboard</span>
+            </a>
+            
+            <div class="menu-section">Maintenance</div>
+
+            <a href="#" class="menu-item" id="maintenanceToggle">
+                <i class="bi bi-wrench"></i>
+                <span>Maintenance</span>
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+
+            <div class="submenu" id="maintenanceSubmenu">
+                <a href="product-category-list.html" class="menu-item active">
+                    <i class="bi bi-layers"></i>
+                    <span>Product Category</span>
+                </a>
+                <a href="price-base-list.html" class="menu-item">
+                    <i class="bi bi-database"></i>
+                    <span>Price Base</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="bi bi-box"></i>
+                    <span>Product</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="bi bi-gear"></i>
+                    <span>Product Specification</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="bi bi-pin-map"></i>
+                    <span>Local Agent</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="bi bi-building"></i>
+                    <span>Supplier</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="bi bi-shield-check"></i>
+                    <span>GTC</span>
+                </a>
+            </div>
+
+            <div class="menu-section">Operations</div>
+            
+            <a href="#" class="menu-item">
+                <i class="bi bi-diagram-3"></i>
+                <span>Workflow</span>
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            
+            <a href="#" class="menu-item">
+                <i class="bi bi-file-earmark-text"></i>
+                <span>Tender</span>
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            
+            <a href="#" class="menu-item">
+                <i class="bi bi-check2-square"></i>
+                <span>Verification Processes</span>
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            
+            <div class="menu-section">Analytics</div>
+            
+            <a href="#" class="menu-item">
+                <i class="bi bi-bar-chart"></i>
+                <span>Bid Statistic</span>
+            </a>
+        </div>
+        
+        <div class="user-info">
+            <div class="user-avatar">A</div>
+            <div class="user-details">
+                <h6>Administrator</h6>
+                <p>Ceypetco</p>
+            </div>
+        </div>
+    </div>
+
+    
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Header -->
+        <div class="top-header">
+            <a href="product-category-details.html" class="back-button">
+                <i class="bi bi-chevron-left"></i>
+                Back
+            </a>
+            <h1 class="page-title">Edit Product Category</h1>
+            <p class="breadcrumb-subtitle">MAINTENANCE / CATEGORY DEFINITION</p>
+        </div>
+        
+        <!-- Content Area -->
+        <div class="content-area">
+            <div class="form-card">
+                <form id="categoryForm">
+                    <!-- Category Name -->
+                    <div class="form-group">
+                        <label class="form-label">
+                            CATEGORY NAME <span class="required">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            class="form-control" 
+                            id="categoryName" 
+                            value="Refined Gasoline"
+                        >
+                    </div>
+                    
+                    <!-- Category Description -->
+                    <div class="form-group">
+                        <label class="form-label">CATEGORY DESCRIPTION</label>
+                        <textarea 
+                            class="form-control" 
+                            id="categoryDescription"
+                        >Finished gasoline products including 92 RON and 95 RON grades.</textarea>
+                    </div>
+                    
+                    <!-- Status Toggle -->
+                    <div class="form-group">
+                        <label class="form-label">PRODUCT CATEGORY STATUS</label>
+                        <div class="toggle-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="statusToggle" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <div class="toggle-label-text">
+                                <div class="main-label">DETERMINE IF THIS CATEGORY IS OPERATIONAL</div>
+                                <div class="sub-label">Active categories can be linked to products and used in procurement</div>
+                            </div>
+                            <span class="status-badge active" id="statusBadge">ACTIVE</span>
+                        </div>
+                        
+                        <!-- Product Counter Cards -->
+                        <div class="counter-cards mt-3">
+                            <div class="counter-card active">
+                                <div class="counter-label">Active Linked Products</div>
+                                <div class="counter-value">8</div>
+                            </div>
+                            <div class="counter-card inactive">
+                                <div class="counter-label">Inactive Linked Products</div>
+                                <div class="counter-value">4</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Warning Alert -->
+                        <div class="warning-alert" id="deactivationWarning">
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+                            <div class="warning-content">
+                                <h6>DEACTIVATION RESTRICTED</h6>
+                                <p>There are <strong>8 active linked products</strong> to this category. Please inactivate the relevant Products or link another Product Category to these active products in order to inactivate this Product Category.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Form Actions -->
+                    <div class="form-actions">
+                        <button 
+                            type="button" 
+                            class="btn-secondary-custom" 
+                            onclick="window.location.href='product-category-details.html'"
+                        >
+                            Discard Changes
+                        </button>
+                        <button type="submit" class="btn-primary-custom">
+                            <i class="bi bi-save"></i>
+                            Update Category
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="main-footer">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="text-muted small">
+                    © 2024 PetroProcure. All rights reserved.
+                </div>
+                <div class="text-muted small">
+                    Version 2.0 | Last Updated: <span id="currentDate"></span>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- Bootstrap 5.3 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Set current date
+        document.getElementById('currentDate').textContent = new Date().toLocaleDateString();
+        
+       
+        
+        // Maintenance submenu toggle
+        const maintenanceToggle = document.getElementById('maintenanceToggle');
+        const maintenanceSubmenu = document.getElementById('maintenanceSubmenu');
+        
+        if (maintenanceToggle && maintenanceSubmenu) {
+            maintenanceSubmenu.classList.add('show');
+            maintenanceToggle.classList.add('expanded');
+            
+            maintenanceToggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                maintenanceSubmenu.classList.toggle('show');
+                maintenanceToggle.classList.toggle('expanded');
+            });
+        }
+        
+        // Status toggle with warning
+const statusToggle = document.getElementById('statusToggle');
+const statusBadge = document.getElementById('statusBadge');
+const deactivationWarning = document.getElementById('deactivationWarning');
+
+// Active product count (you can change this value)
+const activeProductCount = 8;
+
+statusToggle.addEventListener('change', (e) => {
+    if (!e.target.checked) {
+        // User is trying to turn OFF (deactivate)
+        if (activeProductCount > 0) {
+            // Block the toggle - keep it checked
+            e.target.checked = true;
+            
+            // Show the warning alert
+            deactivationWarning.style.display = 'flex';
+            deactivationWarning.classList.add('show');
+        } else {
+            // No active products, allow deactivation
+            statusBadge.textContent = 'INACTIVE';
+            statusBadge.className = 'status-badge';
+            statusBadge.style.backgroundColor = '#F3F4F6';
+            statusBadge.style.color = '#6B7280';
+            deactivationWarning.style.display = 'none';
+            deactivationWarning.classList.remove('show');
+        }
+    } else {
+        // User turned it back ON (activate)
+        statusBadge.textContent = 'ACTIVE';
+        statusBadge.className = 'status-badge active';
+        statusBadge.style.backgroundColor = '#D1FAE5';
+        statusBadge.style.color = '#10B981';
+        
+        // Hide warning
+        deactivationWarning.style.display = 'none';
+        deactivationWarning.classList.remove('show');
+    }
+});
+        
+        // Form submission
+        const form = document.getElementById('categoryForm');
+        
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Product Category updated successfully!');
+            window.location.href = 'product-category-details.html';
+        });
+    </script>
+</body>
+</html>

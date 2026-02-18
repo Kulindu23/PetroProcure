@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Category - PetroProcure</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-indigo: #4F46E5;
+            --success-emerald: #10B981;
+            --warning-amber: #F59E0B;
+            --danger-rose: #F43F5E;
+            --surface-bg: #F8FAFC;
+            --sidebar-width: 270px;
+        }
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            background-color: var(--surface-bg);
+            font-weight: 500;
+        }
+        
+        
+
+        .mobile-menu-toggle:hover {
+            background-color: var(--primary-indigo);
+            transform: scale(1.05);
+        }
+
+        .mobile-menu-toggle i {
+            font-size: 1.5rem;
+        }
+
+        .mobile-menu-toggle.active i:before {
+            content: "\f659";
+        } 
+
+       
+        
+        /* NEW CODE */
+        .sidebar {
+          position: fixed;
+          top: 0;
+          left: 0;
+          height: 100vh;
+          width: var(--sidebar-width);
+          background-color: #FFFFFF;
+          border-right: 1px solid #E5E7EB;
+          overflow-y: auto;
+          z-index: 1000;
+        /* Sidebar is always visible - no transform */
+     } 
+        
+        .sidebar-logo {
+            padding: 1.5rem 1rem;
+            border-bottom: 1px solid #E5E7EB;
+        }
+        
+        .sidebar-logo h5 {
+            font-weight: 900;
+            color: var(--primary-indigo);
+            margin: 0;
+            font-size: 1.1rem;
+        }
+        
+        .sidebar-logo p {
+            font-size: 0.7rem;
+            color: #9CA3AF;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .sidebar-menu {
+            padding: 1rem 0;
+        }
+        
+        .menu-item {
+            padding: 0.75rem 1rem;
+            color: #6B7280;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.2s;
+            margin: 0.25rem 0.5rem;
+            border-radius: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .menu-item:hover {
+            background-color: #F3F4F6;
+            color: var(--primary-indigo);
+        }
+        
+        .menu-item.active {
+            background-color: #EEF2FF;
+            color: var(--primary-indigo);
+            font-weight: 600;
+        }
+        
+        .menu-item i {
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .menu-section {
+            padding: 1rem 1rem 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #9CA3AF;
+            letter-spacing: 0.5px;
+        }
+        
+        .submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            padding-left: 2.5rem;
+        }
+
+        .submenu.show {
+            max-height: 500px;
+            transition: max-height 0.3s ease-in;
+        }
+        
+        .submenu .menu-item {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        .menu-item i.bi-chevron-down {
+            transition: transform 0.3s ease;
+        }
+
+        .menu-item.expanded i.bi-chevron-down {
+            transform: rotate(180deg);
+        }
+        
+        /* NEW CODE */
+        .main-content {
+          margin-left: var(--sidebar-width);  /* Always shifted */
+          min-height: 100vh;
+          display: flex;
+          flex-direction: column;
+        }
+        
+        /* NEW CODE */
+        .top-header {
+           background-color: #FFFFFF;
+           border-bottom: 1px solid #E5E7EB;
+           padding: 1rem 2rem;  /* Removed left padding for hamburger */
+           position: sticky;
+           top: 0;
+           z-index: 999;
+        }
+        
+        .page-title {
+            font-weight: 900;
+            color: #111827;
+            margin: 0;
+            font-size: 1.75rem;
+        }
+        
+        .page-subtitle {
+            color: #9CA3AF;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin: 0;
+        }
+        
+        /* Content Area */
+        .content-area {
+            flex: 1;
+            padding: 2.5rem;
+        }
+        
+        /* Sticky Filter Bar */
+        .filter-bar {
+            position: sticky;
+            top: 116px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            padding: 1.5rem;
+            border-radius: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            z-index: 998;
+        }
+        
+        /* Tab Switcher */
+        .tab-switcher {
+            display: inline-flex;
+            background-color: #F3F4F6;
+            border-radius: 1rem;
+            padding: 0.25rem;
+            gap: 0.25rem;
+        }
+        
+        .tab-switcher .tab-btn {
+            padding: 0.5rem 1.5rem;
+            background: transparent;
+            border: none;
+            border-radius: 0.75rem;
+            color: #6B7280;
+            font-weight: 600;
+            transition: all 0.3s;
+            cursor: pointer;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+        
+        .tab-switcher .tab-btn.active {
+            background-color: #FFFFFF;
+            color: var(--primary-indigo);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .tab-switcher .tab-btn:hover:not(.active) {
+            background-color: #F9FAFB;
+        }
+        
+        /* Search Bar */
+        .search-bar {
+            position: relative;
+            max-width: 384px;
+        }
+        
+        .search-bar input {
+            border-radius: 1.5rem;
+            padding: 0.75rem 1.5rem 0.75rem 3rem;
+            border: 1px solid #E5E7EB;
+            font-size: 0.95rem;
+            width: 100%;
+        }
+        
+        .search-bar i {
+            position: absolute;
+            left: 1.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9CA3AF;
+        }
+        
+        /* Primary Button */
+        .btn-primary-custom {
+            background: linear-gradient(135deg, var(--primary-indigo), #6366F1);
+            border: none;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 2px 8px rgba(79, 70, 229, 0.2);
+        }
+        
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+        }
+
+        .btn-primary-custom:active {
+            transform: scale(0.95);
+        }
+        
+        /* Category Cards Grid */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .category-card {
+            background: #FFFFFF;
+            border-radius: 2rem;
+            padding: 1.75rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            cursor: pointer;
+            animation: fadeInUp 0.5s ease-out;
+        }
+        
+        .category-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        
+        .category-card:hover .edit-icon {
+            opacity: 1;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .card-icon-container {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #EEF2FF, #E0E7FF);
+            border-radius: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.25rem;
+        }
+        
+        .card-icon-container i {
+            font-size: 1.75rem;
+            color: var(--primary-indigo);
+        }
+
+        .category-card:hover .card-icon-container {
+            background: linear-gradient(135deg, var(--primary-indigo), #6366F1);
+        }
+
+        .category-card:hover .card-icon-container i {
+            color: #FFFFFF;
+        }
+        
+        .badge-status {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            padding: 0.4rem 0.9rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        
+        .badge-active {
+            background-color: #4F46E5;
+            color: var(--success-emerald);
+        }
+        
+        .badge-inactive {
+            background-color: #F3F4F6;
+            color: #6B7280;
+        }
+        
+        .category-name {
+            font-weight: 900;
+            color: #111827;
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+            transition: all 0.3s;
+        }
+
+        .category-card:hover .category-name {
+            color: var(--primary-indigo);
+        }
+        
+        .category-description {
+            font-size: 0.85rem;
+            color: #6B7280;
+            font-style: italic;
+            margin-bottom: 1.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            min-height: 2.5rem;
+        }
+        
+        .card-footer-info {
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid #F3F4F6;
+            padding-top: 1rem;
+            font-size: 0.75rem;
+            color: #9CA3AF;
+        }
+        
+        .footer-item strong {
+            display: block;
+            color: #000000;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+        }
+        
+        .edit-icon {
+            position: absolute;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            width: 36px;
+            height: 36px;
+            background: var(--primary-indigo);
+            color: white;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: all 0.3s;
+        }
+        
+        .user-info {
+            background-color: #F9FAFB;
+            padding: 1rem;
+            margin: 1rem 0.5rem;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-indigo), #7C3AED);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+        }
+        
+        .user-details h6 {
+            margin: 0;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #111827;
+        }
+        
+        .user-details p {
+            margin: 0;
+            font-size: 0.75rem;
+            color: #6B7280;
+        }
+        
+        /* Footer */
+        .main-footer {
+            background-color: #FFFFFF;
+            border-top: 1px solid #E5E7EB;
+            padding: 1.5rem 2rem;
+            margin-top: auto;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .top-header {
+                padding-left: 4rem;
+                padding-right: 1rem;
+            }
+            
+            .category-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-bar {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+            <div class="d-flex align-items-center gap-2">
+                <div class="bg-primary text-white rounded-3 p-2" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
+                    <strong style="font-size: 0.9rem;">PP</strong>
+                </div>
+                <div>
+                    <h5>PetroProcure</h5>
+                    <p>E-PROCUREMENT V2</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="sidebar-menu">
+            <a href="#" class="menu-item">
+                <i class="bi bi-grid"></i>
+                <span>Dashboard</span>
+            </a>
+            
+            <div class="menu-section">Maintenance</div>
+
+            <a href="#" class="menu-item" id="maintenanceToggle">
+                <i class="bi bi-wrench"></i>
+                <span>Maintenance</span>
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+
+            <div class="submenu" id="maintenanceSubmenu">
+                <a href="product-category-list.html" class="menu-item active">
+                    <i class="bi bi-layers"></i>
+                    <span>Product Category</span>
+                </a>
+                <a href="price-base-list.html" class="menu-item">
+                    <i class="bi bi-database"></i>
+                    <span>Price Base</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="bi bi-box"></i>
+                    <span>Product</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="bi bi-gear"></i>
+                    <span>Product Specification</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="bi bi-pin-map"></i>
+                    <span>Local Agent</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="bi bi-building"></i>
+                    <span>Supplier</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="bi bi-shield-check"></i>
+                    <span>GTC</span>
+                </a>
+            </div>
+
+            <div class="menu-section">Operations</div>
+            
+            <a href="workflow-collection.html" class="menu-item">
+                <i class="bi bi-diagram-3"></i>
+                <span>Workflow</span>
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            
+            <a href="#" class="menu-item">
+                <i class="bi bi-file-earmark-text"></i>
+                <span>Tender</span>
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            
+            <a href="#" class="menu-item">
+                <i class="bi bi-check2-square"></i>
+                <span>Verification Processes</span>
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            
+            <div class="menu-section">Analytics</div>
+            
+            <a href="#" class="menu-item">
+                <i class="bi bi-bar-chart"></i>
+                <span>Bid Statistic</span>
+            </a>
+        </div>
+        
+        <div class="user-info">
+            <div class="user-avatar">A</div>
+            <div class="user-details">
+                <h6>Administrator</h6>
+                <p>Ceypetco</p>
+            </div>
+        </div>
+    </div>
+
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Header -->
+        <div class="top-header">
+            <h1 class="page-title">Maintenance</h1>
+            <p class="page-subtitle">E-PROCUREMENT PIPELINE MANAGEMENT</p>
+        </div>
+        
+        <!-- Content Area -->
+        <div class="content-area">
+            <!-- Filter Bar -->
+            <div class="filter-bar">
+                <div class="row align-items-center">
+                    <div class="col-md-5">
+                        <div class="tab-switcher">
+                            <button class="tab-btn active" data-filter="all">ALL CATEGORIES</button>
+                            <button class="tab-btn" data-filter="active">ACTIVE</button>
+                            <button class="tab-btn" data-filter="inactive">INACTIVE</button>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="search-bar">
+                            <i class="bi bi-search"></i>
+                            <input type="text" class="form-control" placeholder="Search categories..." id="searchInput">
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-end">
+                        <a href="product-category-create.html" class="btn-primary-custom text-decoration-none">
+                            <i class="bi bi-plus-circle"></i>
+                            Create Category
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Category Cards Grid -->
+            <div class="category-grid" id="categoryGrid">
+                <!-- Card 1 - Active -->
+                <div class="category-card" data-status="active" onclick="window.location.href='product-category-details.html'">
+                    <span class="badge-status badge-active">ACTIVE</span>
+                    <div class="card-icon-container">
+                        <i class="bi bi-layers"></i>
+                    </div>
+                    <h3 class="category-name">Refined Gasoline</h3>
+                    <p class="category-description">"Finished gasoline products including 92 RON and 95 RON grades."</p>
+                    <div class="card-footer-info">
+                        <div class="footer-item">
+                            LINKED PRODUCTS
+                            <strong>12 Items</strong>
+                        </div>
+                        <div class="footer-item text-end">
+                            LAST MODIFIED
+                            <strong>2024-01-15</strong>
+                        </div>
+                    </div>
+                    <div class="edit-icon">
+                        <i class="bi bi-pencil"></i>
+                    </div>
+                </div>
+                
+                <!-- Card 2 - Active -->
+                <div class="category-card" data-status="active" onclick="window.location.href='product-category-details.html'">
+                    <span class="badge-status badge-active">ACTIVE</span>
+                    <div class="card-icon-container">
+                        <i class="bi bi-layers"></i>
+                    </div>
+                    <h3 class="category-name">Crude Feedstock</h3>
+                    <p class="category-description">"Raw crude oil varieties for refinery processing."</p>
+                    <div class="card-footer-info">
+                        <div class="footer-item">
+                            LINKED PRODUCTS
+                            <strong>8 Items</strong>
+                        </div>
+                        <div class="footer-item text-end">
+                            LAST MODIFIED
+                            <strong>2024-02-10</strong>
+                        </div>
+                    </div>
+                    <div class="edit-icon">
+                        <i class="bi bi-pencil"></i>
+                    </div>
+                </div>
+                
+                <!-- Card 3 - Active -->
+                <div class="category-card" data-status="active" onclick="window.location.href='product-category-details.html'">
+                    <span class="badge-status badge-active">ACTIVE</span>
+                    <div class="card-icon-container">
+                        <i class="bi bi-layers"></i>
+                    </div>
+                    <h3 class="category-name">Aviation Fuels</h3>
+                    <p class="category-description">"High-purity kerosene-based fuels for jet engines and turbine aircraft."</p>
+                    <div class="card-footer-info">
+                        <div class="footer-item">
+                            LINKED PRODUCTS
+                            <strong>5 Items</strong>
+                        </div>
+                        <div class="footer-item text-end">
+                            LAST MODIFIED
+                            <strong>2024-01-22</strong>
+                        </div>
+                    </div>
+                    <div class="edit-icon">
+                        <i class="bi bi-pencil"></i>
+                    </div>
+                </div>
+                
+                <!-- Card 4 - Inactive -->
+                <div class="category-card" data-status="inactive" onclick="window.location.href='product-category-details.html'">
+                    <span class="badge-status badge-inactive">INACTIVE</span>
+                    <div class="card-icon-container">
+                        <i class="bi bi-layers"></i>
+                    </div>
+                    <h3 class="category-name">Heavy Fuel Oils</h3>
+                    <p class="category-description">"Residual fuel oils used for industrial heating and marine propulsion."</p>
+                    <div class="card-footer-info">
+                        <div class="footer-item">
+                            LINKED PRODUCTS
+                            <strong>14 Items</strong>
+                        </div>
+                        <div class="footer-item text-end">
+                            LAST MODIFIED
+                            <strong>2023-11-05</strong>
+                        </div>
+                    </div>
+                    <div class="edit-icon">
+                        <i class="bi bi-pencil"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="main-footer">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="text-muted small">
+                    © 2024 PetroProcure. All rights reserved.
+                </div>
+                <div class="text-muted small">
+                    Version 2.0 | Last Updated: <span id="currentDate"></span>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- Bootstrap 5.3 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Set current date
+        document.getElementById('currentDate').textContent = new Date().toLocaleDateString();
+        
+        
+        
+        // Maintenance submenu toggle
+        const maintenanceToggle = document.getElementById('maintenanceToggle');
+        const maintenanceSubmenu = document.getElementById('maintenanceSubmenu');
+        
+        if (maintenanceToggle && maintenanceSubmenu) {
+            maintenanceSubmenu.classList.add('show');
+            maintenanceToggle.classList.add('expanded');
+            
+            maintenanceToggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                maintenanceSubmenu.classList.toggle('show');
+                maintenanceToggle.classList.toggle('expanded');
+            });
+        }
+        
+        // Tab filter functionality
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        const cards = document.querySelectorAll('.category-card');
+        
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                const filter = button.dataset.filter;
+                cards.forEach(card => {
+                    if (filter === 'all' || card.dataset.status === filter) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+        
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                
+                cards.forEach(card => {
+                    const name = card.querySelector('.category-name').textContent.toLowerCase();
+                    const description = card.querySelector('.category-description').textContent.toLowerCase();
+                    
+                    if (name.includes(searchTerm) || description.includes(searchTerm)) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        }
+    </script>
+</body>
+</html>

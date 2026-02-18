@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PetroProcure - E-Procurement System</title>
+    
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-indigo: #4F46E5;
+            --success-emerald: #10B981;
+            --warning-amber: #F59E0B;
+            --sidebar-width: 250px;
+        }
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            background-color: #F9FAFB;
+            font-weight: 500;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: var(--sidebar-width);
+            background-color: #FFFFFF;
+            border-right: 1px solid #E5E7EB;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+        
+        .sidebar-logo {
+            padding: 1.5rem 1rem;
+            border-bottom: 1px solid #E5E7EB;
+        }
+        
+        .sidebar-logo h5 {
+            font-weight: 900;
+            color: var(--primary-indigo);
+            margin: 0;
+            font-size: 1.1rem;
+        }
+        
+        .sidebar-logo p {
+            font-size: 0.7rem;
+            color: #9CA3AF;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .sidebar-menu {
+            padding: 1rem 0;
+        }
+        
+        .menu-item {
+            padding: 0.75rem 1rem;
+            color: #6B7280;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.2s;
+            margin: 0.25rem 0.5rem;
+            border-radius: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .menu-item:hover {
+            background-color: #F3F4F6;
+            color: var(--primary-indigo);
+        }
+        
+        .menu-item.active {
+            background-color: #EEF2FF;
+            color: var(--primary-indigo);
+            font-weight: 600;
+        }
+        
+        .menu-item i {
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .menu-section {
+            padding: 1rem 1rem 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #9CA3AF;
+            letter-spacing: 0.5px;
+        }
+        
+        .submenu {
+            padding-left: 2.5rem;
+        }
+        
+        .submenu .menu-item {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Top Header */
+        .top-header {
+            background-color: #FFFFFF;
+            border-bottom: 1px solid #E5E7EB;
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
+        
+        .page-title {
+            font-weight: 900;
+            color: #111827;
+            margin: 0;
+            font-size: 1.75rem;
+        }
+        
+        .page-subtitle {
+            color: #9CA3AF;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin: 0;
+        }
+        
+        /* Content Area */
+        .content-area {
+            flex: 1;
+            padding: 2rem;
+        }
+        
+        /* Footer */
+        .main-footer {
+            background-color: #FFFFFF;
+            border-top: 1px solid #E5E7EB;
+            padding: 1.5rem 2rem;
+            margin-top: auto;
+        }
+        
+        .user-info {
+            background-color: #F9FAFB;
+            padding: 1rem;
+            margin: 1rem 0.5rem;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-indigo), #7C3AED);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+        }
+        
+        .user-details h6 {
+            margin: 0;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #111827;
+        }
+        
+        .user-details p {
+            margin: 0;
+            font-size: 0.75rem;
+            color: #6B7280;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+            
+            .sidebar.show {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            <div class="d-flex align-items-center gap-2">
+                <div class="bg-primary text-white rounded-3 p-2" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
+                    <strong style="font-size: 0.9rem;">PP</strong>
+                </div>
+                <div>
+                    <h5>PetroProcure</h5>
+                    <p>E-PROCUREMENT V2</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="sidebar-menu">
+            <a href="index.html" class="menu-item">
+                <i class="bi bi-grid"></i>
+                <span>Dashboard</span>
+            </a>
+            
+            <div class="menu-section">Maintenance</div>
+            
+            <a href="#" class="menu-item">
+                <i class="bi bi-wrench"></i>
+                <span>Maintenance</span>
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            
+            <div class="submenu">
+                <a href="#" class="menu-item">
+                    <i class="bi bi-layers"></i>
+                    <span>Product Category</span>
+                </a>
+                <a href="price-base-list.html" class="menu-item active">
+                    <i class="bi bi-database"></i>
+                    <span>Price Base</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="bi bi-box"></i>
+                    <span>Product</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="bi bi-gear"></i>
+                    <span>Product Specification</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="bi bi-pin-map"></i>
+                    <span>Local Agent</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="bi bi-building"></i>
+                    <span>Supplier</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="bi bi-shield-check"></i>
+                    <span>GTC</span>
+                </a>
+            </div>
+            
+            <div class="menu-section">Operations</div>
+            
+            <a href="#" class="menu-item">
+                <i class="bi bi-diagram-3"></i>
+                <span>Workflow</span>
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            
+            <a href="#" class="menu-item">
+                <i class="bi bi-file-earmark-text"></i>
+                <span>Tender</span>
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            
+            <a href="#" class="menu-item">
+                <i class="bi bi-check2-square"></i>
+                <span>Verification Processes</span>
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            
+            <div class="menu-section">Analytics</div>
+            
+            <a href="#" class="menu-item">
+                <i class="bi bi-bar-chart"></i>
+                <span>Bid Statistic</span>
+            </a>
+        </div>
+        
+        <div class="user-info">
+            <div class="user-avatar">A</div>
+            <div class="user-details">
+                <h6>Administrator</h6>
+                <p>Ceypetco</p>
+            </div>
+        </div>
+    </div>
+    
+    
+    <div class="main-content">
+        
+        <div class="top-header">
+            <h1 class="page-title">Price Base</h1>
+            <p class="page-subtitle">E-PROCUREMENT PIPELINE MANAGEMENT</p>
+        </div>
+        
+        
+        <div class="content-area">
+            <!-- Page content goes here -->
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle me-2"></i>
+                This is the main layout template. Individual pages will replace this content area.
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="main-footer">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="text-muted small">
+                    © 2024 PetroProcure. All rights reserved.
+                </div>
+                <div class="text-muted small">
+                    Version 2.0 | Last Updated: <span id="currentDate"></span>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Set current date
+        document.getElementById('currentDate').textContent = new Date().toLocaleDateString();
+        
+        // Mobile menu toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.querySelector('.sidebar');
+        
+        if (menuToggle) {
+            menuToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('show');
+            });
+        }
+    </script>
+</body>
+</html>
