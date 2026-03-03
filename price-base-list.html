@@ -9,6 +9,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
     
@@ -37,18 +40,17 @@
     height: 100vh;
     width: var(--sidebar-width);
     background-color: #FFFFFF;
-    border-right: 1px solid #E5E7EB;
+    
     overflow-y: hidden;  /* CHANGED from auto to hidden */
     z-index: 1000;
     display: flex;  /* ADD */
     flex-direction: column;  /* ADD */
 }
         
-        .sidebar-logo {
+    .sidebar-logo {
     padding: 1.5rem 1rem;
-    
     flex-shrink: 0;  /* ADD - prevents shrinking */
-}
+    }
         
         .sidebar-logo h5 {
             font-weight: 900;
@@ -181,13 +183,7 @@
             white-space: nowrap;  
             
         }
-
-
-
-
-      
-
-        
+     
         .tab-switcher .tab-btn.active {
             background-color: #FFFFFF;
             color: var(--primary-indigo);
@@ -201,7 +197,7 @@
         
         .search-bar input {
             border-radius: 1rem;
-            padding: 0.75rem 1.5rem 0.75rem 3rem;
+            padding: 0.75rem 1.5rem 0.75rem 1rem;
             border: 1px solid #E5E7EB;
             background-color: transparent;
             font-size: 0.95rem;
@@ -209,7 +205,7 @@
         }
         
         .search-bar i {
-            position: absolute;
+            position: absolutle;
             left: 1.25rem;
             top: 50%;
             transform: translateY(-50%);
@@ -236,6 +232,10 @@
             
         }
         
+        .control-bar {
+            border-bottom: 1px solid #E5E7EB;
+            padding-bottom: 1.5rem;
+        }
         
         .price-base-grid {
             display: grid;
@@ -357,14 +357,23 @@
         }
         
        .card-description {
-    font-size: 0.85rem;
-    color: #6B7280;
-    font-style: italic;
-    margin-bottom: 1rem;
-    white-space: nowrap;  /* Keep text in single line */
-    overflow: hidden;  /* Hide overflow */
-    text-overflow: ellipsis;  /* Show ... when text is too long */
-}
+          font-size: 0.85rem;
+          color: #6B7280;
+          font-style: italic;
+          margin-bottom: 1rem;
+          white-space: nowrap;  /* Keep text in single line */
+          overflow: hidden;  /* Hide overflow */
+          text-overflow: ellipsis;  /* Show ... when text is too long */
+        }
+        
+        .description-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #9CA3AF;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
         
         .card-footer-info {
             border-top: 1px solid #F3F4F6;
@@ -402,7 +411,7 @@
     border-top: 1px solid #E5E7EB;  /* ADD - top border */
     flex-shrink: 0;  /* ADD - prevents shrinking */
     width: 100%;  /* ADD - full width */
-    border-radius: 5rem;
+    border-radius: 2rem;
 }
 
 .logged-in-label {
@@ -686,7 +695,7 @@ Sidebar overlay for mobile
                         <i class="bi bi-list-ul"></i>
                         <span>Workflow Collection</span>
                     </a>
-                    <a href="workflow-define.html" class="menu-item">
+                    <a href="workflow-define-new.html" class="menu-item">
                         <i class="bi bi-pencil-square"></i>
                         <span>Define Workflow</span>
                     </a>
@@ -716,14 +725,7 @@ Sidebar overlay for mobile
                 <span>Bid Statistic</span>
             </a>
         </div>
-        
-        <!--<div class="user-info"> 
-            <div class="user-avatar"></div>
-            <div class="user-details">
-                <h6>Administrator</h6>
-                <p>Ceypetco</p>
-            </div>
-        </div>--> 
+
 
 
     <div class="user-info">
@@ -764,7 +766,7 @@ Sidebar overlay for mobile
             <!-- Control Bar -->
            <!-- Control Bar -->
 
-<div class="row align-items-center mb-4">
+<div class="row align-items-center mb-4 control-bar">
     <div class="col-md-4">
         <div class="tab-switcher">
             <button class="tab-btn active" data-filter="all">ALL PRICE BASES</button> 
@@ -774,13 +776,13 @@ Sidebar overlay for mobile
     </div>
     <div class="col-md-4 ps-md-5" >
         <div class="search-bar">
-            <i class="bi bi-search"></i>
+            
             <input type="text" class="form-control" placeholder="Search code or name..." id="searchInput">
         </div>
     </div>
     <div class="col-md-4 text-end">
         <a href="price-base-create.html" class="btn-primary-custom text-decoration-none">
-            <i class="bi bi-plus"></i>
+            <i class="bi bi-plus-lg"></i>
             Create Price Base
         </a>
     </div>
@@ -797,11 +799,12 @@ Sidebar overlay for mobile
                     <div class="badge-type">MOPS</div>
                     <div class="price-code">PGAEY00</div>
                     <h3 class="price-name">MOPS - GASOLINE 92 UNL</h3>
+                    <div class="description-label">SINGLE DESCRIPTION</div>
                     <p class="card-description">"Standard market rate for Gasoline 92 Unlocked."</p>
                     <div class="card-footer-info">
                         <strong>LAST MODIFIED</strong><br><b>2024-01-10</b>
                     </div>
-                    <div class="edit-icon"><a href="price-base-edit.html"><i class="bi bi-pencil"></i></a>
+                    <div class="edit-icon"><a href="price-base-edit.html"><i class="fa-regular fa-pen-to-square"></i></a>
                         
                     </div>
                 </div>
@@ -815,11 +818,12 @@ Sidebar overlay for mobile
                     <div class="badge-type">MOPS</div>
                     <div class="price-code">PGAEZ00</div>
                     <h3 class="price-name">MOPS - GASOLINE 95 UNL</h3>
+                    <div class="description-label">SINGLE DESCRIPTION</div>
                     <p class="card-description">"Premium unleaded market reference for 95 RON."</p>
                     <div class="card-footer-info">
                         <strong>LAST MODIFIED</strong><br><b>2024-02-15</b>
                     </div>
-                    <div class="edit-icon"> <a href="price-base-edit.html"><i class="bi bi-pencil"></i></a>
+                    <div class="edit-icon"> <a href="price-base-edit.html"><i class="fa-regular fa-pen-to-square"></i></a>
                         
                     </div>
                 </div>
@@ -833,11 +837,12 @@ Sidebar overlay for mobile
                     <div class="badge-type">MOPAG</div>
                     <div class="price-code">AA0VC00</div>
                     <h3 class="price-name">MOPAG - JET A-1</h3>
+                    <div class="description-label">SINGLE DESCRIPTION</div>
                     <p class="card-description">"Aviation turbine fuel reference for Arab Gulf markets."</p>
                     <div class="card-footer-info">
                         <strong>LAST MODIFIED</strong><br><b>2023-12-05</b>
                     </div>
-                    <div class="edit-icon"> <a href="price-base-edit.html"><i class="bi bi-pencil"></i></a>
+                    <div class="edit-icon"> <a href="price-base-edit.html"><i class="fa-regular fa-pen-to-square"></i></a>
                        
                     </div>
                 </div>
@@ -851,11 +856,12 @@ Sidebar overlay for mobile
                     <div class="badge-type">MOPS</div>
                     <div class="price-code">PYABF00</div>
                     <h3 class="price-name">MOPS - FUEL OIL</h3>
+                    <div class="description-label">SINGLE DESCRIPTION</div>
                     <p class="card-description">"Residual fuel oil benchmark."</p>
                     <div class="card-footer-info">
                         <strong>LAST MODIFIED</strong><br><b>2023-11-20</b>
                     </div>
-                    <div class="edit-icon"> <a href="price-base-edit.html"><i class="bi bi-pencil"></i></a>
+                    <div class="edit-icon"> <a href="price-base-edit.html"><i class="fa-regular fa-pen-to-square"></i></a>
                         
                     </div>
                 </div>
