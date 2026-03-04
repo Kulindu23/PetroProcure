@@ -120,7 +120,7 @@
         /* ── WARNING ── */
         .warning-alert {
             background: #FFFBEB; border: 1px solid #FCD34D;
-            border-left: 4px solid var(--warning-amber); border-radius: 0.75rem;
+             border-radius: 0.75rem;
             padding: 1rem 1.25rem; display: flex; align-items: flex-start; gap: 0.85rem; margin-top: 0.75rem;
         }
         .warning-alert > i { color: var(--warning-amber); font-size: 1.25rem; flex-shrink: 0; margin-top: 0.1rem; }
@@ -175,30 +175,61 @@
         </div>
     </div>
     <div class="sidebar-menu">
-        <a href="#" class="menu-item"><i class="bi bi-grid"></i><span>Dashboard</span></a>
-        <a href="#" class="menu-item"><i class="bi bi-shield-check"></i><span>Accessibility</span><i class="bi bi-chevron-down ms-auto"></i></a>
+        <a href="#" class="menu-item">
+            <i class="bi bi-grid"></i><span>Dashboard</span>
+        </a>
+        <a href="#" class="menu-item">
+            <i class="bi bi-shield-check"></i><span>Accessibility</span>
+            <i class="bi bi-chevron-down ms-auto"></i>
+        </a>
 
         <a href="#" class="menu-item expanded" id="maintenanceToggle">
-            <i class="bi bi-wrench"></i><span>Maintenance</span><i class="bi bi-chevron-down ms-auto"></i>
+            <i class="bi bi-wrench"></i>
+            <span>Maintenance</span>
+            <i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <div class="submenu show" id="maintenanceSubmenu">
-            <a href="#" class="menu-item"><i class="bi bi-layers"></i><span>Product Category</span></a>
-            <a href="#" class="menu-item active"><i class="bi bi-database"></i><span>Price Base</span></a>
-            <a href="#" class="menu-item"><i class="bi bi-box"></i><span>Product</span></a>
-            <a href="#" class="menu-item"><i class="bi bi-gear"></i><span>Product Specification</span></a>
-            <a href="#" class="menu-item"><i class="bi bi-pin-map"></i><span>Local Agent</span></a>
-            <a href="#" class="menu-item"><i class="bi bi-building"></i><span>Supplier</span></a>
+            <a href="#" class="menu-item">
+                <i class="bi bi-layers"></i><span>Product Category</span>
+            </a>
+            <a href="#" class="menu-item active">
+                <i class="bi bi-database"></i><span>Price Base</span>
+            </a>
+            <a href="#" class="menu-item">
+                <i class="bi bi-box"></i><span>Product</span>
+            </a>
+            <a href="#" class="menu-item">
+                <i class="bi bi-gear"></i><span>Product Specification</span>
+            </a>
+            <a href="#" class="menu-item">
+                <i class="bi bi-pin-map"></i><span>Local Agent</span>
+            </a>
+            <a href="#" class="menu-item">
+                <i class="bi bi-building"></i><span>Supplier</span>
+            </a>
             <a href="#" class="menu-item"><i class="bi bi-shield-check"></i><span>GTC</span></a>
         </div>
 
-        <a href="#" class="menu-item" id="workflowToggle"><i class="bi bi-diagram-3"></i><span>Workflow</span><i class="bi bi-chevron-down ms-auto"></i></a>
+        <a href="#" class="menu-item" id="workflowToggle">
+            <i class="bi bi-diagram-3"></i><span>Workflow</span>
+            <i class="bi bi-chevron-down ms-auto"></i>
+        </a>
         <div class="submenu" id="workflowSubmenu">
-            <a href="#" class="menu-item"><i class="bi bi-list-ul"></i><span>Workflow Collection</span></a>
-            <a href="#" class="menu-item"><i class="bi bi-pencil-square"></i><span>Define New Workflow</span></a>
-            <a href="#" class="menu-item"><i class="bi bi-check-circle"></i><span>Verify Workflow</span></a>
+            <a href="#" class="menu-item">
+                <i class="bi bi-list-ul"></i>
+                <span>Workflow Collection</span></a>
+            <a href="#" class="menu-item">
+                <i class="bi bi-pencil-square"></i>
+                <span>Define New Workflow</span></a>
+            <a href="#" class="menu-item">
+                <i class="bi bi-check-circle"></i>
+                <span>Verify Workflow</span></a>
         </div>
 
-        <a href="#" class="menu-item" id="tenderToggle"><i class="bi bi-file-earmark-text"></i><span>Tender</span><i class="bi bi-chevron-down ms-auto"></i></a>
+        <a href="#" class="menu-item" id="tenderToggle">
+            <i class="bi bi-file-earmark-text"></i><span>Tender</span>
+            <i class="bi bi-chevron-down ms-auto"></i>
+        </a>
         <div class="submenu" id="tenderSubmenu">
             <a href="#" class="menu-item"><i class="bi bi-layers"></i><span>Tender Collection</span></a>
             <a href="#" class="menu-item"><i class="bi bi-plus-circle"></i><span>Create Tender</span></a>
@@ -297,7 +328,7 @@
 
                     <!-- Warning -->
                     <div class="warning-alert" id="deactivationWarning">
-                        <i class="bi bi-exclamation-circle-fill"></i>
+                        <i class="bi bi-exclamation-circle"></i>
                         <div class="warning-content">
                             <h6>DEACTIVATION RESTRICTED</h6>
                             <p>There are <strong>2 active linked products</strong> to this price base index. Please inactivate the relevant products or link another price base to these active products in order to inactivate this price base index.</p>
