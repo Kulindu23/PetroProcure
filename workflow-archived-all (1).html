@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pending Workflows - PetroProcure</title>
+    <title>Archived Workflows - PetroProcure</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
@@ -12,7 +12,7 @@
     <style>
         :root {
             --primary-indigo: #4F46E5;
-            --warning-amber: #F59E0B;
+            --inactive-gray: #9CA3AF;
             --surface-bg: #F8FAFC;
             --sidebar-width: 270px;
         }
@@ -190,7 +190,7 @@
         .tab-switcher .tab-btn.active {
             background-color: #FFFFFF;
             color: var(--primary-indigo);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
         
         .tab-switcher .tab-btn:hover:not(.active) {
@@ -208,7 +208,7 @@
         
         .category-filter-btn {
             padding: 0.75rem 1.5rem;
-            background: white;
+            background: #FFFFFF;
             border: 1px solid #E5E7EB;
             border-radius: 0.75rem;
             color: #6B7280;
@@ -219,7 +219,6 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            
         }
         
         .category-filter-btn:hover {
@@ -260,7 +259,7 @@
         .workflow-icon {
             width: 56px;
             height: 56px;
-            background: linear-gradient(135deg, #EEF2FF, #E0E7FF);
+            background: linear-gradient(135deg, #F3F4F6, #E5E7EB);
             border-radius: 1rem;
             display: flex;
             align-items: center;
@@ -274,11 +273,13 @@
         }
         
         .workflow-card:hover .workflow-icon {
-            background: linear-gradient(135deg, var(--primary-indigo), #6366F1);
+            background: #6f88be;
+            transition: background 0.3s ease;
         }
         
         .workflow-card:hover .workflow-icon i {
-            color: #FFFFFF;
+            color: #98a4e1;
+            transition: color 0.3s ease;
         }
         
         .badge-status {
@@ -293,14 +294,14 @@
             letter-spacing: 0.5px;
         }
         
-        .badge-pending {
-            background-color: #f7e7d5;
-            color: #a85e0e;
+        .badge-inactive {
+            background-color: #F3F4F6;
+            color: #9CA3AF;
         }
         
         .workflow-category {
             font-size: 0.7rem;
-            color: var(--primary-indigo);
+            color: #D1D5DB;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             margin-bottom: 0.5rem;
@@ -312,15 +313,11 @@
             font-size: 1.25rem;
             margin-bottom: 0.75rem;
         }
-
-        .workflow-card:hover .workflow-name {
-            color: var(--primary-indigo);
-        }
         
         .workflow-description {
             font-size: 0.85rem;
             font-style: italic;
-            color: #6B7280;
+            color: #9CA3AF;
             line-height: 1.6;
             margin-bottom: 1.5rem;
             min-height: 3rem;
@@ -343,7 +340,7 @@
         
         .footer-info-item strong {
             display: block;
-            color: #000000;
+            color: #111827;
             font-weight: 700;
             font-size: 0.9rem;
             margin-top: 0.25rem;
@@ -368,68 +365,6 @@
             color: #6B7280;
         }
         
-        /* Empty State */
-        .empty-state {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 4rem 2rem;
-            background: #FFFFFF;
-            border-radius: 2rem;
-            border: 2px dashed #D1D5DB;
-            margin-top: 2rem;
-            min-height: 400px;
-        }
-        
-        .empty-state-icon {
-            width: 80px;
-            height: 80px;
-            background: #F3F4F6;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 1.5rem;
-        }
-        
-        .empty-state-icon i {
-            font-size: 2rem;
-            color: #9CA3AF;
-        }
-        
-        .empty-state-title {
-            font-weight: 900;
-            font-size: 1.5rem;
-            color: #111827;
-            margin-bottom: 0.75rem;
-        }
-        
-        .empty-state-description {
-            font-size: 0.95rem;
-            color: #6B7280;
-            text-align: center;
-            max-width: 500px;
-            margin-bottom: 1.5rem;
-        }
-        
-        .btn-secondary-custom {
-            background: #ffffff;
-            border: 1px solid #bcbdbf;
-            color: #6B7280;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.75rem;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-        
-        .btn-secondary-custom:hover {
-            background: #E5E7EB;
-            color: #374151;
-        }
-        
-       
-
     .user-info {
     background-color: #F9FAFB;
     padding: 1rem 1rem;
@@ -463,7 +398,7 @@
     flex-shrink: 0;
 }
 
-    .user-details h6 {
+ .user-details h6 {
     margin: 0;
     font-weight: 700;
     font-size: 0.9rem;
@@ -475,12 +410,10 @@
     font-size: 0.75rem;
     color: #6B7280;
 }
-
         
         /* Footer */
         .main-footer {
             background-color: #F8FAFC;
-            
             padding: 1.5rem 2rem;
             margin-top: auto;
         }
@@ -530,33 +463,9 @@
             </a>
             
             <div class="submenu" id="maintenanceSubmenu">
-                <a href="product-category-list.html" class="menu-item">
+                <a href="#" class="menu-item">
                     <i class="bi bi-layers"></i>
                     <span>Product Categories</span>
-                </a>
-                <a href="price-base-list.html" class="menu-item">
-                    <i class="bi bi-database"></i>
-                    <span>Price Base</span>
-                </a>
-                <a href="#" class="menu-item">
-                    <i class="bi bi-box-seam"></i>
-                    <span>Product</span>
-                </a>
-                <a href="#" class="menu-item">
-                    <i class="bi bi-gear"></i>
-                    <span>Product Specification</span>
-                </a>
-                <a href="#" class="menu-item">
-                    <i class="bi bi-suitcase-lg"></i>
-                    <span>Local Agent</span>
-                </a>
-                <a href="#" class="menu-item">
-                    <i class="bi bi-truck"></i>
-                    <span>Supplier</span>
-                </a>
-                <a href="#" class="menu-item">
-                    <i class="bi bi-shield-check"></i>
-                    <span>GTC</span>
                 </a>
             </div>
             
@@ -589,9 +498,10 @@
             
             <div class="submenu" id="TenderSubmenu">
                 <a href="#" class="menu-item">
-                    <i class="bi bi-list-ul"></i>
+                    <i class=" bi-list-ul"></i>
                     <span>Tender Collection</span>
                 </a>
+
                 <a href="#" class="menu-item">
                     <i class="bi bi-pencil-square"></i>
                     <span>Create Tender</span>
@@ -611,7 +521,7 @@
         </div>
         
         <div class="user-info">
-         
+            
                 <div class="user-label">Logged in as</div>
                 <div class="d-flex align-items-center gap-3 mt-2">
                     <div class="user-avatar"></div>
@@ -638,21 +548,20 @@
             <div class="d-flex justify-content-between align-items-center mb-1">
                 <div class="tab-switcher">
                     <a href="workflow-collection.html" class="tab-btn">ACTIVE BLUEPRINTS</a>
-                    <button class="tab-btn active">PENDING VERIFICATIONS</button>
-                    <a href="workflow-archived-all (1).html" class="tab-btn">ARCHIVED</a>
+                    <a href="workflow-pending-all.html" class="tab-btn">PENDING VERIFICATIONS</a>
+                    <a href="workflow-archived-all (1).html" class="tab-btn active">ARCHIVED</a>
                 </div>
             </div>
             
             <!-- Section Title -->
             <div class="mb-3">
-                <h3 style="font-weight: 900; color: #111827; font-size: 1.5rem;">Drafts Awaiting Governance Sign-off</h3>
-                <p style="color: #9CA3AF; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px;">VERIFICATION-READY BLUEPRINTS PENDING HIGHER-LEVEL APPROVAL</p>
+                <h3 style="font-weight: 900; color: #111827; font-size: 1.5rem;">Historical Governance Definitions</h3>
+                <p style="color: #9CA3AF; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px;">AUDIT TRAIL FOR SUPERSEDED VERIFICATION STRUCTURES</p>
             </div>
             
             <!-- Category Filters -->
             <div class="category-filters mt-4">
                 <button class="category-filter-btn active" data-category="all">
-                    
                     ALL CATEGORIES
                 </button>
                 <button class="category-filter-btn" data-category="tender-details">
@@ -669,30 +578,30 @@
                 </button>
             </div>
             
-            <!-- Content Sections -->
+            <!-- Content -->
             
-            <!-- All Categories View -->
+            
             <div id="all-content" class="content-section active">
                 <div class="workflow-grid">
-                    <!-- Workflow Card 1 -->
+                    <!-- Card 1 -->
                     <div class="workflow-card" data-category="tender-details">
-                        <span class="badge-status badge-pending">PENDING</span>
+                        <span class="badge-status badge-inactive">INACTIVE</span>
                         <div class="workflow-icon">
                             <i class="bi bi-shield-check"></i>
                         </div>
-                        <div style="position: absolute; top: 4rem; right: 1.5rem; font-size: 0.65rem; color: #9CA3AF; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">DETAILS PROCESS</div>
+                        <div style="position: absolute; top: 4rem; right: 1.5rem; font-size: 0.65rem; color: #D1D5DB; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">DETAILS PROCESS</div>
                         <div class="workflow-category">TENDER DETAILS VERIFICATION</div>
-                        <h3 class="workflow-name">West-Terminal Spot Protocol</h3>
-                        <p class="workflow-description">"New technical clearance logic pending higher-level verification for West-Terminal operations."</p>
+                        <h3 class="workflow-name">Legacy Details Baseline (v2)</h3>
+                        <p class="workflow-description">"Historical tender details verification logic used during the 2022-2023 procurement cycles. Superseded by v4."</p>
                         <div class="workflow-footer">
                             <div class="footer-info">
                                 <div class="footer-info-item">
                                     LOGIC NODES
-                                    <strong>3 Approval Steps</strong>
+                                    <strong>4 Approval Steps</strong>
                                 </div>
                                 <div class="footer-info-item">
                                     LAST VERSION
-                                    <strong>2026-01-20</strong>
+                                    <strong>2023-01-10</strong>
                                 </div>
                             </div>
                             <div class="workflow-actions">
@@ -703,25 +612,83 @@
                         </div>
                     </div>
                     
-                    <!-- Workflow Card 2 -->
-                    <div class="workflow-card" data-category="tender-details">
-                        <span class="badge-status badge-pending">PENDING</span>
+                    <!-- Card 2 -->
+                    <div class="workflow-card" data-category="tender-document">
+                        <span class="badge-status badge-inactive">INACTIVE</span>
                         <div class="workflow-icon">
-                            <i class="bi bi-shield-check"></i>
+                            <i class="bi bi-file-earmark-text"></i>
                         </div>
-                        <div style="position: absolute; top: 4rem; right: 1.5rem; font-size: 0.65rem; color: #9CA3AF; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">DETAILS PROCESS</div>
-                        <div class="workflow-category">TENDER DETAILS VERIFICATION</div>
-                        <h3 class="workflow-name">Universal Governance v5 (Beta)</h3>
-                        <p class="workflow-description">"Updated baseline logic awaiting final sign-off before replacing the current v4 engine."</p>
+                        <div style="position: absolute; top: 4rem; right: 1.5rem; font-size: 0.65rem; color: #D1D5DB; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">DOCUMENT PROCESS</div>
+                        <div class="workflow-category">TENDER DOCUMENT VERIFICATION</div>
+                        <h3 class="workflow-name">Redundant Document Gate 2023</h3>
+                        <p class="workflow-description">"Old tender document validation flow. Removed due to technical committee consolidation efforts."</p>
                         <div class="workflow-footer">
                             <div class="footer-info">
                                 <div class="footer-info-item">
                                     LOGIC NODES
-                                    <strong>5 Approval Steps</strong>
+                                    <strong>3 Approval Steps</strong>
                                 </div>
                                 <div class="footer-info-item">
                                     LAST VERSION
-                                    <strong>2026-01-18</strong>
+                                    <strong>2023-04-05</strong>
+                                </div>
+                            </div>
+                            <div class="workflow-actions">
+                                <button class="workflow-action-btn" title="View Details">
+                                    <i class="bi bi-stack"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Card 3  -->
+                    <div class="workflow-card" data-category="tender-evaluation">
+                        <span class="badge-status badge-inactive">INACTIVE</span>
+                        <div class="workflow-icon">
+                            <i class="bi bi-sliders"></i>
+                        </div>
+                        <div style="position: absolute; top: 4rem; right: 1.5rem; font-size: 0.65rem; color: #D1D5DB; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">EVALUATION PROCESS</div>
+                        <div class="workflow-category">TENDER EVALUATION VERIFICATION</div>
+                        <h3 class="workflow-name">Experimental Evaluation v0.9</h3>
+                        <p class="workflow-description">"Beta evaluation engine tested for crude spot arrivals. Archived after the successful pilot of the refined evaluation system."</p>
+                        <div class="workflow-footer">
+                            <div class="footer-info">
+                                <div class="footer-info-item">
+                                    LOGIC NODES
+                                    <strong>7 Approval Steps</strong>
+                                </div>
+                                <div class="footer-info-item">
+                                    LAST VERSION
+                                    <strong>2023-09-15</strong>
+                                </div>
+                            </div>
+                            <div class="workflow-actions">
+                                <button class="workflow-action-btn" title="View Details">
+                                    <i class="bi bi-stack"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Card 4 - Tender Details -->
+                    <div class="workflow-card" data-category="tender-details">
+                        <span class="badge-status badge-inactive">INACTIVE</span>
+                        <div class="workflow-icon">
+                            <i class="bi bi-shield-check"></i>
+                        </div>
+                        <div style="position: absolute; top: 4rem; right: 1.5rem; font-size: 0.65rem; color: #D1D5DB; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">DETAILS PROCESS</div>
+                        <div class="workflow-category">TENDER DETAILS VERIFICATION</div>
+                        <h3 class="workflow-name">Emergency Spot Details (2022)</h3>
+                        <p class="workflow-description">"One-off emergency verification protocol created during the 2022 supply crisis. Now archived as per standard compliance policy."</p>
+                        <div class="workflow-footer">
+                            <div class="footer-info">
+                                <div class="footer-info-item">
+                                    LOGIC NODES
+                                    <strong>2 Approval Steps</strong>
+                                </div>
+                                <div class="footer-info-item">
+                                    LAST VERSION
+                                    <strong>2022-11-20</strong>
                                 </div>
                             </div>
                             <div class="workflow-actions">
@@ -737,25 +704,25 @@
             <!-- Tender Details View -->
             <div id="tender-details-content" class="content-section">
                 <div class="workflow-grid">
-                    <!-- Same 2 cards as all categories -->
+                    <!-- Only Details cards -->
                     <div class="workflow-card">
-                        <span class="badge-status badge-pending">PENDING</span>
+                        <span class="badge-status badge-inactive">INACTIVE</span>
                         <div class="workflow-icon">
                             <i class="bi bi-shield-check"></i>
                         </div>
-                        <div style="position: absolute; top: 4rem; right: 1.5rem; font-size: 0.65rem; color: #9CA3AF; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">DETAILS PROCESS</div>
+                        <div style="position: absolute; top: 4rem; right: 1.5rem; font-size: 0.65rem; color: #D1D5DB; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">DETAILS PROCESS</div>
                         <div class="workflow-category">TENDER DETAILS VERIFICATION</div>
-                        <h3 class="workflow-name">West-Terminal Spot Protocol</h3>
-                        <p class="workflow-description">"New technical clearance logic pending higher-level verification for West-Terminal operations."</p>
+                        <h3 class="workflow-name">Legacy Details Baseline (v2)</h3>
+                        <p class="workflow-description">"Historical tender details verification logic used during the 2022-2023 procurement cycles. Superseded by v4."</p>
                         <div class="workflow-footer">
                             <div class="footer-info">
                                 <div class="footer-info-item">
                                     LOGIC NODES
-                                    <strong>3 Approval Steps</strong>
+                                    <strong>4 Approval Steps</strong>
                                 </div>
                                 <div class="footer-info-item">
                                     LAST VERSION
-                                    <strong>2026-01-20</strong>
+                                    <strong>2023-01-10</strong>
                                 </div>
                             </div>
                             <div class="workflow-actions">
@@ -767,23 +734,23 @@
                     </div>
                     
                     <div class="workflow-card">
-                        <span class="badge-status badge-pending">PENDING</span>
+                        <span class="badge-status badge-inactive">INACTIVE</span>
                         <div class="workflow-icon">
                             <i class="bi bi-shield-check"></i>
                         </div>
-                        <div style="position: absolute; top: 4rem; right: 1.5rem; font-size: 0.65rem; color: #9CA3AF; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">DETAILS PROCESS</div>
+                        <div style="position: absolute; top: 4rem; right: 1.5rem; font-size: 0.65rem; color: #D1D5DB; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">DETAILS PROCESS</div>
                         <div class="workflow-category">TENDER DETAILS VERIFICATION</div>
-                        <h3 class="workflow-name">Universal Governance v5 (Beta)</h3>
-                        <p class="workflow-description">"Updated baseline logic awaiting final sign-off before replacing the current v4 engine."</p>
+                        <h3 class="workflow-name">Emergency Spot Details (2022)</h3>
+                        <p class="workflow-description">"One-off emergency verification protocol created during the 2022 supply crisis. Now archived as per standard compliance policy."</p>
                         <div class="workflow-footer">
                             <div class="footer-info">
                                 <div class="footer-info-item">
                                     LOGIC NODES
-                                    <strong>5 Approval Steps</strong>
+                                    <strong>2 Approval Steps</strong>
                                 </div>
                                 <div class="footer-info-item">
                                     LAST VERSION
-                                    <strong>2026-01-18</strong>
+                                    <strong>2022-11-20</strong>
                                 </div>
                             </div>
                             <div class="workflow-actions">
@@ -796,31 +763,69 @@
                 </div>
             </div>
             
-            <!-- Tender Document Empty State -->
+            <!-- Tender Document View -->
             <div id="tender-document-content" class="content-section">
-                <div class="empty-state">
-                    <div class="empty-state-icon">
-                        <i class="bi bi-file-earmark-text"></i>
+                <div class="workflow-grid">
+                    <div class="workflow-card">
+                        <span class="badge-status badge-inactive">INACTIVE</span>
+                        <div class="workflow-icon">
+                            <i class="bi bi-file-earmark-text"></i>
+                        </div>
+                        <div style="position: absolute; top: 4rem; right: 1.5rem; font-size: 0.65rem; color: #D1D5DB; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">DOCUMENT PROCESS</div>
+                        <div class="workflow-category">TENDER DOCUMENT VERIFICATION</div>
+                        <h3 class="workflow-name">Redundant Document Gate 2023</h3>
+                        <p class="workflow-description">"Old tender document validation flow. Removed due to technical committee consolidation efforts."</p>
+                        <div class="workflow-footer">
+                            <div class="footer-info">
+                                <div class="footer-info-item">
+                                    LOGIC NODES
+                                    <strong>3 Approval Steps</strong>
+                                </div>
+                                <div class="footer-info-item">
+                                    LAST VERSION
+                                    <strong>2023-04-05</strong>
+                                </div>
+                            </div>
+                            <div class="workflow-actions">
+                                <button class="workflow-action-btn" title="View Details">
+                                    <i class="bi bi-stack"></i>
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                    <h2 class="empty-state-title">NO PENDING WORKFLOWS IDENTIFIED</h2>
-                    <p class="empty-state-description">
-                        Clear your category filters or switch status tabs to see other defined procurement pipelines.
-                    </p>
-                    <button class="btn-secondary-custom" data-category="all">CLEAR CATEGORY FILTER</button>
                 </div>
             </div>
             
-            <!-- Tender Evaluation Empty State -->
+            <!-- Tender Evaluation View -->
             <div id="tender-evaluation-content" class="content-section">
-                <div class="empty-state">
-                    <div class="empty-state-icon">
-                        <i class="bi bi-sliders"></i>
+                <div class="workflow-grid">
+                    <div class="workflow-card">
+                        <span class="badge-status badge-inactive">INACTIVE</span>
+                        <div class="workflow-icon">
+                            <i class="bi bi-sliders"></i>
+                        </div>
+                        <div style="position: absolute; top: 4rem; right: 1.5rem; font-size: 0.65rem; color: #D1D5DB; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">EVALUATION PROCESS</div>
+                        <div class="workflow-category">TENDER EVALUATION VERIFICATION</div>
+                        <h3 class="workflow-name">Experimental Evaluation v0.9</h3>
+                        <p class="workflow-description">"Beta evaluation engine tested for crude spot arrivals. Archived after the successful pilot of the refined evaluation system."</p>
+                        <div class="workflow-footer">
+                            <div class="footer-info">
+                                <div class="footer-info-item">
+                                    LOGIC NODES
+                                    <strong>7 Approval Steps</strong>
+                                </div>
+                                <div class="footer-info-item">
+                                    LAST VERSION
+                                    <strong>2023-09-15</strong>
+                                </div>
+                            </div>
+                            <div class="workflow-actions">
+                                <button class="workflow-action-btn" title="View Details">
+                                    <i class="bi bi-stack"></i>
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                    <h2 class="empty-state-title">NO PENDING WORKFLOWS IDENTIFIED</h2>
-                    <p class="empty-state-description">
-                        Clear your category filters or switch status tabs to see other defined procurement pipelines.
-                    </p>
-                    <button class="btn-secondary-custom" data-category="all">CLEAR CATEGORY FILTER</button>
                 </div>
             </div>
         </div>
@@ -906,22 +911,6 @@
                 if (contentSections[category]) {
                     contentSections[category].classList.add('active');
                 }
-            });
-        });
-        
-        // Clear filter buttons
-        const clearFilterButtons = document.querySelectorAll('.btn-secondary-custom');
-        clearFilterButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                // Reset to all categories
-                categoryButtons.forEach(btn => btn.classList.remove('active'));
-                categoryButtons[0].classList.add('active'); // First button is "ALL CATEGORIES"
-                
-                // Show all content
-                Object.values(contentSections).forEach(section => {
-                    section.classList.remove('active');
-                });
-                contentSections['all'].classList.add('active');
             });
         });
     </script>

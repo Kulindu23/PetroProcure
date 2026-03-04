@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Define New Workflow - PetroProcure</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-indigo: #4F46E5;
+            --success-emerald: #10B981;
+            --warning-amber: #F59E0B;
+            --danger-rose: #F43F5E;
+            --surface-bg: #F8FAFC;
+            --sidebar-width: 270px;
+        }
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            background-color: var(--surface-bg);
+            font-weight: 500;
+        }
+        
+        /* Sidebar Styles - Same as workflow-collection-active.html */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: var(--sidebar-width);
+            background-color: #FFFFFF;
+            
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .sidebar-logo {
+            padding: 1.5rem 1rem;
+            flex-shrink: 0;
+        }
+        
+        .sidebar-logo h5 {
+            font-weight: 900;
+            color: black;
+            margin: 0;
+            font-size: 1.1rem;
+        }
+        
+        .sidebar-logo p {
+            font-size: 0.7rem;
+            color: #9CA3AF;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .sidebar-menu {
+            padding: 1rem 0;
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        
+        .sidebar-menu::-webkit-scrollbar {
+            width: 5px;
+        }
+        
+        .sidebar-menu::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .sidebar-menu::-webkit-scrollbar-thumb {
+            background: #E5E7EB;
+            border-radius: 10px;
+        }
+        
+        .menu-item {
+            padding: 0.75rem 1rem;
+            color: #6B7280;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.2s;
+            margin: 0.25rem 0.5rem;
+            border-radius: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .menu-item:hover {
+            background-color: #F3F4F6;
+            color: var(--primary-indigo);
+        }
+        
+        .menu-item.active {
+            background-color: #EEF2FF;
+            color: var(--primary-indigo);
+            font-weight: 600;
+        }
+        
+        .menu-item i {
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            padding-left: 2.5rem;
+        }
+
+        .submenu.show {
+            max-height: 500px;
+            transition: max-height 0.3s ease-in;
+        }
+        
+        .submenu .menu-item {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        .menu-item i.bi-chevron-down {
+            transition: transform 0.3s ease;
+            margin-left: auto;
+        }
+
+        .menu-item.expanded i.bi-chevron-down {
+            transform: rotate(180deg);
+        }
+        
+        .user-info {
+            background-color: #F9FAFB;
+            padding: 1rem 1rem;
+            margin: 0;  /* CHANGED - no margin */
+            border-top: 1px solid #E5E7EB;  /* ADD - top border */
+            flex-shrink: 0;  /* ADD - prevents shrinking */
+            width: 100%;  /* ADD - full width */
+            border-radius: 5rem;
+        }
+
+        .logged-in-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: #9CA3AF;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 80%;
+            background: linear-gradient(135deg, var(--primary-indigo), #7C3AED);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .user-details h6 {
+            margin: 0;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #111827;
+        }
+
+        .user-details p {
+            margin: 0;
+            font-size: 0.75rem;
+            color: #6B7280;
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--surface-bg);
+        }
+        
+        /* Top Header */
+        .top-header {
+            background-color: var(--surface-bg);
+            display: flex;
+            flex-direction: column;
+            border-bottom: 1px solid #E5E7EB;
+            padding: 1.5rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
+        
+        .back-button {
+            color: #6B7280;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            font-size: 1.25rem;
+            margin-bottom: 0;
+            transition: all 0.2s;
+            padding: 0.5rem;
+            line-height: 1;
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            width: 40px;
+            height: 40px;
+        }
+        
+        
+        .back-button:hover {
+            color: var(--primary-indigo);
+            background-color: #ffffff;
+        }
+        
+        .page-title {
+            font-weight: 900;
+            color: #111827;
+            margin: 0;
+            font-size: 1.75rem;
+            display: inline-block;
+            margin-right: 1rem;
+        }
+        
+        .page-subtitle {
+            color: #9CA3AF;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin: 0;
+        }
+
+        .sub {
+            color: var(--primary-indigo);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin: 0;
+        }
+        
+        .header-stats {
+            display: flex;
+            gap: 2rem;
+            background-color: #FFFFFF;
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat-item {
+            text-align: left;
+        }
+        
+        .stat-label {
+            font-size: 0.7rem;
+            color: #9CA3AF;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        
+        .stat-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary-indigo);
+        }
+        
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 32px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #D1D5DB;
+            transition: 0.4s;
+            border-radius: 32px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 24px;
+            width: 24px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .toggle-slider {
+            background-color: var(--primary-indigo);
+        }
+        
+        input:checked + .toggle-slider:before {
+            transform: translateX(28px);
+        }
+        
+        /* Content Area */
+        .content-area {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        
+        /* Section Card */
+        .section-card {
+            background: #FFFFFF;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        
+        .section-title {
+            font-weight: 900;
+            color: #111827;
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .section-description {
+            color: #6B7280;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+        }
+        
+        /* Form Elements */
+        .form-label {
+            font-weight: 700;
+            color: #374151;
+            margin-bottom: 0.75rem;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: block;
+        }
+        
+        .form-label .required {
+            color: var(--danger-rose);
+            margin-left: 3px;
+        }
+        
+        .form-control, .form-select {
+            border: 1px solid #D1D5DB;
+            border-radius: 0.75rem;
+            padding: 0.85rem 1rem;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            background-color: #F8FAFC;
+            width: 100%;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-indigo);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+            outline: none;
+        }
+        
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+            background-color: #f8fafc;
+        }
+        
+        /* Workflow Steps */
+        .steps-section {
+            margin-top: 2rem;
+        }
+        
+        .steps-header {
+            font-weight: 900;
+            color: #111827;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .steps-description {
+            color: #9CA3AF;
+            font-size: 0.85rem;
+            margin-bottom: 2rem;
+        }
+        
+        .workflow-step {
+            background: #FFFFFF;
+            border: 1px solid #E5E7EB;
+            border-radius: 1.25rem;
+            padding: 1.75rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .step-header {
+            display: flex;
+            align-items: start;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .step-number {
+            width: 48px;
+            height: 48px;
+            background: #303043;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 900;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+        
+        .step-info {
+            flex: 1;
+        }
+        
+        .step-label {
+            font-size: 0.7rem;
+            color: #9CA3AF;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .step-title-input {
+            font-weight: 700;
+            color: #111827;
+            font-size: 1.1rem;
+            border: none;
+            background: transparent;
+            padding: 0;
+            width: 100%;
+        }
+        
+        .step-category-dropdown {
+            position: absolute;
+            top: 1.75rem;
+            right: 1.75rem;
+        }
+        
+        .step-category-select {
+            min-width: 200px;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            position: relative;
+        }
+        
+        /* Custom Dropdown for Step Category */
+        .category-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .category-dropdown-toggle {
+            background: white;
+            border: 1px solid #D1D5DB;
+            border-radius: 0.75rem;
+            padding: 0.65rem 2.5rem 0.65rem 1rem;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            color: #111827;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            min-width: 200px;
+            text-align: left;
+        }
+        
+        .category-dropdown-toggle:hover {
+            border-color: var(--primary-indigo);
+            background-color: #F9FAFB;
+        }
+        
+        .category-dropdown-toggle::after {
+            content: '\F282';
+            font-family: 'bootstrap-icons';
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: transform 0.3s;
+        }
+        
+        .category-dropdown-toggle.active::after {
+            transform: translateY(-50%) rotate(180deg);
+        }
+        
+        .category-dropdown-menu {
+            position: absolute;
+            top: calc(100% + 0.5rem);
+            right: 0;
+            background: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            min-width: 200px;
+            z-index: 1000;
+            display: none;
+            padding: 0.5rem 0;
+        }
+        
+        .category-dropdown-menu.show {
+            display: block;
+        }
+        
+        .category-dropdown-item {
+            padding: 0.75rem 1rem;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            color: #374151;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: block;
+            width: 100%;
+            text-align: left;
+            border: none;
+            background: none;
+        }
+        
+        .category-dropdown-item:hover {
+            background-color: #F3F4F6;
+            color: var(--primary-indigo);
+        }
+        
+        .category-dropdown-item.active {
+            background-color: #EEF2FF;
+            color: var(--primary-indigo);
+            font-weight: 700;
+        }
+        
+        /* Verifiers */
+        .verifiers-label {
+            font-size: 0.75rem;
+            color: #6B7280;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            margin-bottom: 0.75rem;
+        }
+        
+        .auto-sync-link {
+            color: var(--primary-indigo);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            text-decoration: none;
+            letter-spacing: 0.3px;
+        }
+        
+        .verifier-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .verifier-tag {
+            background-color: #ffffff;
+            border: 1px solid #E5E7EB;
+            padding: 0.5rem 1rem;
+            border-radius: 0.75rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #374151;
+        }
+        
+        /* Signature Threshold Card */
+        .signature-card {
+            background: linear-gradient(135deg, var(--primary-indigo), #6366F1);
+            border-radius: 1.25rem;
+            padding: 2rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            width: 56%;
+        }
+        
+        .signature-number {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: 900;
+            flex-shrink: 0;
+        }
+        
+        .signature-content {
+            flex: 1;
+        }
+        
+        .signature-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.75rem;
+            opacity: 0.9;
+        }
+        
+        .signature-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .signature-description {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+        
+        /* Insert Step Area */
+        .insert-step-area {
+            border: 2px dashed #D1D5DB;
+            border-radius: 1.25rem;
+            padding: 3rem 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .insert-step-area:hover {
+            border-color: var(--primary-indigo);
+            background-color: #F9FAFB;
+        }
+        
+        .insert-step-area:hover .insert-step-icon {
+            background: var(--primary-indigo);
+        }
+        
+        .insert-step-area:hover .insert-step-icon i {
+            color: white;
+        }
+        
+        .insert-step-area:hover .insert-step-text {
+            color: var(--primary-indigo);
+        }
+        
+        .insert-step-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #EEF2FF, #E0E7FF);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            transition: all 0.3s;
+        }
+        
+        .insert-step-icon i {
+            font-size: 1.75rem;
+            color: #9CA3AF;
+            transition: all 0.3s;
+        }
+        
+        .insert-step-text {
+            color: #9CA3AF;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+        }
+        
+        /* Buttons */
+        .btn-submit {
+            background: linear-gradient(135deg, var(--primary-indigo), #6366F1);
+            border: none;
+            color: white;
+            padding: 0.65rem 1.8rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.3);
+            color: white;
+        }
+        
+        /* Footer */
+        .main-footer {
+            background-color: var(--surface-bg);
+            
+            padding: 1.5rem 2rem;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+            <div class="d-flex align-items-center gap-2">
+                <div class="bg-primary text-white rounded-3 p-2" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
+                    <strong style="font-size: 0.9rem;">PP</strong>
+                </div>
+                <div>
+                    <h5>PetroProcure</h5>
+                    <p>E-PROCUREMENT V2</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="sidebar-menu">
+            <a href="#" class="menu-item">
+                <i class="bi bi-grid"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="#" class="menu-item">
+                <i class="bi bi-shield-check"></i>
+                <span>Accessibility</span>
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+
+            <a href="#" class="menu-item">
+                <i class="bi bi-wrench"></i>
+                <span>Maintenance</span>
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+
+            <a href="#" class="menu-item expanded" id="workflowToggle">
+                <i class="bi bi-gear"></i>
+                <span>Workflow</span>
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+
+            <div class="submenu show" id="workflowSubmenu">
+                <a href="workflow-collection.html" class="menu-item">
+                    <i class="bi bi-list-ul"></i>
+                    <span>Workflow Collection</span>
+                </a>
+                <a href="workflow-define-new.html" class="menu-item active">
+                    <i class="bi bi-pencil-square"></i>
+                    <span>Define New Workflow</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="bi bi-check-circle"></i>
+                    <span>Verify Workflow</span>
+                </a>
+            </div>
+            
+            <a href="#" class="menu-item">
+                <i class="bi bi-file-earmark-text"></i>
+                <span>Tender</span>
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            
+            <a href="#" class="menu-item">
+                <i class="bi bi-check2-square"></i>
+                <span>Verification Processes</span>
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            
+            <a href="#" class="menu-item">
+                <i class="bi bi-bar-chart"></i>
+                <span>Bid Statistic</span>
+            </a>
+        </div>
+        
+        <div class="user-info">
+            <div class="logged-in-label">LOGGED IN AS</div>
+            <div class="d-flex align-items-center gap-3 mt-2">
+                <div class="user-avatar"></div>
+                <div class="user-details">
+                    <h6>Administrator</h6>
+                    <p>Ceypetco</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Header -->
+        <div class="top-header">
+            <h1 class="page-title">Create Workflow</h1>
+            <p class="page-subtitle">E-PROCUREMENT PIPELINE MANAGEMENT</p>
+
+            <div style="margin-top: 2rem;" class="d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center gap-3">
+                    <a href="workflow-collection.html" style="background-color: #ffffff; border: 1px solid #E5E7EB; color: #11141b; padding: 0.6rem 0.9rem; border-radius: 0.75rem; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; transition: all 0.3s;" class="back-button" onmouseover="this.style.backgroundColor='#F9FAFB'; this.style.borderColor='#4F46E5'; this.style.color='#4F46E5';" onmouseout="this.style.backgroundColor='#ffffff'; this.style.borderColor='#E5E7EB'; this.style.color='#374151';">
+                        <i class="bi bi-chevron-left"></i>
+                    </a>
+                    <div>
+                        <h1 class="page-title">Define Workflow</h1>
+                        <p class="sub">BLUEPRINT APPROVAL HIERARCHIES</p>
+                    </div>
+                </div>
+                    
+                <div class="d-flex align-items-center gap-4">
+                    <div class="header-stats">
+                        <div class="stat-item">
+                            <div class="stat-label">Nodes</div>
+                            <div class="stat-value">1 Steps</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Total Approvals</div>
+                            <div class="stat-value">1 Required</div>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center gap-2" style="background-color: #FFFFFF; padding: 0.75rem 1.25rem; border-radius: 0.75rem; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);">
+                        <span style="font-size: 0.75rem; color: #6B7280; text-transform: uppercase; font-weight: 700;">ACTION STATUS</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <button class="btn-submit">
+                        Submit for Verification
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Content Area -->
+        <div class="content-area">
+            <!-- Structural Logic Section -->
+            <div class="section-card">
+                <h2 class="section-title">Structural Logic & Compatibility</h2>
+                <p class="section-description">Define identity and target applicability</p>
+                
+                <div class="row">
+                    <div class="col-md-6">
+
+                        <div class="mb-4">
+                            <label class="form-label">Workflow Category <span class="required">*</span></label>
+                            <select class="form-select">
+                                <option>Tender Details Verification</option>
+                                <option>Tender Document Verification</option>
+                                <option>Tender Evaluation Verification</option>
+                            </select>
+                        </div>
+<div class="col-md-12">
+        <div class="mb-4">
+            <label class="form-label">Workflow Name *</label>
+            <input type="text" class="form-control" placeholder="e.g., Standard Refined Product Cycle">
+        </div>
+    </div>
+
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-4">
+                            <label class="form-label">Operational Description</label>
+                            <textarea class="form-control" placeholder="Define how this workflow governs the verification process..."></textarea>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+    
+</div>
+                
+                <div class="row">
+                    <div class="col-md-6" style="display: flex; justify-content: space-between;">
+                         <div class="col-md-6">
+                        <div class="mb-4 "style ="margin-right: 0.5rem;">
+                            <label class="form-label">Applicable Product Type <span class="required">*</span></label>
+                            <select class="form-select">
+                                <option>Refined & Crude</option>
+                                <option>Refined Only</option>
+                                <option>Crude Only</option>
+                            </select>
+                        </div>
+                        </div>
+                         <div class="col-md-6">
+                       <div class="mb-4" style="padding-left: 0.5rem;">
+                            <label class="form-label">Applicable Tender Type <span class="required">*</span></label>
+                            <select class="form-select">
+                                <option>Single & Term</option>
+                                <option>Single Only</option>
+                                <option>Term Only</option>
+                            </select>
+                        </div>
+                       
+                         </div>
+                         
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-0">
+                    <label class="form-label">Workflow Purpose & Justification (For Verifier) <span class="required">*</span></label>
+                    <textarea class="form-control" placeholder="Explain why this new workflow logic is necessary to the higher-level verifier..."></textarea>
+                </div>
+                       
+                    </div>
+                </div>
+                
+                
+            </div>
+            
+            <!-- Sequential Steps Section -->
+            <div class="steps-section">
+                <h2 class="steps-header">Sequential Steps</h2>
+                <p class="steps-description">Configure the chronological order of verifications</p>
+                
+                <!-- Step 1 -->
+                <div class="workflow-step">
+                    <div class="step-category-dropdown">
+                        <div class="category-dropdown">
+                            <button class="category-dropdown-toggle" id="categoryDropdown">
+                                Approval
+                            </button>
+                            <div class="category-dropdown-menu" id="categoryMenu">
+                                <button class="category-dropdown-item" data-value="review">Review</button>
+                                <button class="category-dropdown-item active" data-value="approval">Approval</button>
+                                <button class="category-dropdown-item" data-value="review-approval">Review & Approval</button>
+                                <button class="category-dropdown-item" data-value="upload">Upload</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="step-header">
+                        <div class="step-number">1</div>
+                        <div class="step-info">
+                            <div class="step-label">Step Title</div>
+                            <input type="text" class="step-title-input" value="Initial Verification">
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label">Target Governance Role <span class="required">*</span></label>
+                            <select class="form-select">
+                                <option>Commercial Verification (COM_GRP_04)</option>
+                                <option>TC Committee Members</option>
+                                <option>TC Committee Chairman</option>
+                                <option>SHLPC Committee Members</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <label class="verifiers-label mb-0">Whitelist Authorized Verifiers (2 Assigned)</label>
+                            <a href="#" class="auto-sync-link">Automatic Group Sync</a>
+                        </div>
+                        <div class="verifier-tags">
+                            <span class="verifier-tag">Katrina Bennett</span>
+                            <span class="verifier-tag">Gretchen Bodinski</span>
+                        </div>
+                    </div>
+                    
+                    <div class="signature-card">
+                        <div class="signature-number">1</div>
+                        <div class="signature-content">
+                            <div class="signature-label">
+                                <i class="bi bi-shield-check"></i>
+                                <span>Required Approvals</span>
+                            </div>
+                            <div class="signature-title">Signature Threshold</div>
+                            <div class="signature-description">Define the minimum number of approvals required from the <strong>Commercial Verification</strong> pool to progress this step.</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Insert New Step Area -->
+                <div class="insert-step-area">
+                    <div class="insert-step-icon">
+                        <i class="bi bi-plus-lg"></i>
+                    </div>
+                    <p class="insert-step-text">Insert Next Workflow Step</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="main-footer">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="text-muted small">
+                    © 2024 PetroProcure. All rights reserved.
+                </div>
+                <div class="text-muted small">
+                    Version 2.0 | Last Updated: <span id="currentDate"></span>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- Bootstrap 5.3 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Set current date
+        document.getElementById('currentDate').textContent = new Date().toLocaleDateString();
+        
+        // Workflow submenu toggle
+        const workflowToggle = document.getElementById('workflowToggle');
+        const workflowSubmenu = document.getElementById('workflowSubmenu');
+        
+        if (workflowToggle && workflowSubmenu) {
+            workflowToggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                workflowSubmenu.classList.toggle('show');
+                workflowToggle.classList.toggle('expanded');
+            });
+        }
+        
+        // Category Dropdown functionality
+        const categoryDropdown = document.getElementById('categoryDropdown');
+        const categoryMenu = document.getElementById('categoryMenu');
+        const categoryItems = document.querySelectorAll('.category-dropdown-item');
+        
+        if (categoryDropdown && categoryMenu) {
+            // Toggle dropdown
+            categoryDropdown.addEventListener('click', (e) => {
+                e.stopPropagation();
+                categoryDropdown.classList.toggle('active');
+                categoryMenu.classList.toggle('show');
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!categoryDropdown.contains(e.target) && !categoryMenu.contains(e.target)) {
+                    categoryDropdown.classList.remove('active');
+                    categoryMenu.classList.remove('show');
+                }
+            });
+            
+            // Handle category selection
+            categoryItems.forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    
+                    // Remove active class from all items
+                    categoryItems.forEach(i => i.classList.remove('active'));
+                    
+                    // Add active class to clicked item
+                    item.classList.add('active');
+                    
+                    // Update dropdown toggle text
+                    categoryDropdown.textContent = item.textContent;
+                    
+                    // Close dropdown
+                    categoryDropdown.classList.remove('active');
+                    categoryMenu.classList.remove('show');
+                });
+            });
+        }
+    </script>
+</body>
+</html>

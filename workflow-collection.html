@@ -515,7 +515,7 @@
         }*/
 
 
-        .user-info {
+    .user-info {
     background-color: #F9FAFB;
     padding: 1rem 1rem;
     margin: 0;  /* CHANGED - no margin */
@@ -608,7 +608,7 @@
             </a>
 
             <div class="submenu" id="maintenanceSubmenu">
-                <a href="product-category-list.html" class="menu-item active">
+                <a href="product-category-list.html" class="menu-item">
                     <i class="bi bi-layers"></i>
                     <span>Product Category</span>
                 </a>
@@ -649,7 +649,7 @@
                     <i class="bi bi-list-ul"></i>
                     <span>Workflow Collection</span>
                 </a>
-                <a href="workflow-define.html" class="menu-item">
+                <a href="workflow-define-new.html" class="menu-item">
                     <i class="bi bi-pencil-square"></i>
                     <span>Define New Workflow</span>
                 </a>
@@ -700,11 +700,11 @@
         <!-- Content Area -->
         <div class="content-area">
             <!-- Tab Switcher and Define Button -->
-            <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-1">
                 <div class="tab-switcher">
                     <button class="tab-btn active" data-tab="active">ACTIVE BLUEPRINTS</button>
-                    <a href="workflow-pending-all.html" class="tab-btn" data-tab="pending">PENDING VERIFICATIONS</button></a>
-                    <button class="tab-btn" data-tab="archived">ARCHIVED</button>
+                    <a href="workflow-pending-all.html" class="tab-btn" data-tab="pending">PENDING VERIFICATIONS</a>
+                    <a href="workflow-archived-all (1).html" class="tab-btn" data-tab="archived">ARCHIVED</a>
                 </div>
                 <a href="workflow-define.html" class="btn-primary-custom">
                     <i class="bi bi-plus"></i>
@@ -741,7 +741,7 @@
             <!-- Workflow Cards Grid -->
             <div class="workflow-grid" id="workflowGrid">
                 <!-- Workflow Card 1 - Tender Details -->
-                <div class="workflow-card" data-category="tender-details" onclick="window.location.href='#'">
+                <div class="workflow-card" data-category="tender-details" onclick="window.location.href='workflow-details-active.html'">
                      <div class="badge-status">
                     <div class="badge-active">ACTIVE</div>
                     <span class="badge-label">Details Process</span>
@@ -768,14 +768,14 @@
                         </div>
                         <div class="workflow-actions">
                             <button class="workflow-action-btn" title="View Details">
-                                <i class="bi bi-layers"></i>
+                                <i class="bi bi-stack"></i>
                             </button>
                         </div>
                     </div>
                 </div>
                 
                 <!-- Workflow Card 2 - Tender Evaluation -->
-                <div class="workflow-card" data-category="tender-evaluation" onclick="window.location.href='#'">
+                <div class="workflow-card" data-category="tender-evaluation" onclick="window.location.href='workflow-details-active.html'">
                      <div class="badge-status">
                     <div class="badge-active">ACTIVE</div>
                     <span class="badge-label">Evaluation Process</span>
@@ -801,14 +801,14 @@
                         </div>
                         <div class="workflow-actions">
                             <button class="workflow-action-btn" title="View Details">
-                                <i class="bi bi-layers"></i>
+                                <i class="bi bi-stack"></i>
                             </button>
                         </div>
                     </div>
                 </div>
                 
                 <!-- Workflow Card 3 - Tender Details -->
-                <div class="workflow-card" data-category="tender-details" onclick="window.location.href='#'">
+                <div class="workflow-card" data-category="tender-details" onclick="window.location.href='workflow-details-active.html'">
                      <div class="badge-status">
                     <div class="badge-active">ACTIVE</div>
                     <span class="badge-label">Details Process</span>
@@ -834,14 +834,14 @@
                         </div>
                         <div class="workflow-actions">
                             <button class="workflow-action-btn" title="View Details">
-                                <i class="bi bi-layers"></i>
+                                <i class="bi bi-stack"></i>
                             </button>
                         </div>
                     </div>
                 </div>
                 
                 <!-- Workflow Card 4 - Tender Document -->
-                <div class="workflow-card" data-category="tender-document" onclick="window.location.href='#'">
+                <div class="workflow-card" data-category="tender-document" onclick="window.location.href='workflow-details-active.html'">
                      <div class="badge-status">
                     <div class="badge-active">ACTIVE</div>
                     <span class="badge-label">Document Process</span>
@@ -867,14 +867,14 @@
                         </div>
                         <div class="workflow-actions">
                             <button class="workflow-action-btn" title="View Details">
-                                <i class="bi bi-layers"></i>
+                                <i class="bi bi-stack"></i>
                             </button>
                         </div>
                     </div>
                 </div>
                 
                 <!-- Workflow Card 5 - Tender Details -->
-                <div class="workflow-card" data-category="tender-details" onclick="window.location.href='#'">
+                <div class="workflow-card" data-category="tender-details" onclick="window.location.href='workflow-details-active.html'">
                      <div class="badge-status">
                     <div class="badge-active">ACTIVE</div>
                     <span class="badge-label">Details Process</span>
@@ -900,7 +900,7 @@
                         </div>
                         <div class="workflow-actions">
                             <button class="workflow-action-btn" title="View Details">
-                                <i class="bi bi-layers"></i>
+                                <i class="bi bi-stack"></i>
                             </button>
                         </div>
                     </div>
@@ -936,14 +936,11 @@
         document.getElementById('currentDate').textContent = new Date().toLocaleDateString();
 
 
-// Maintenance submenu toggle
+        // Add Maintenance toggle handler
         const maintenanceToggle = document.getElementById('maintenanceToggle');
         const maintenanceSubmenu = document.getElementById('maintenanceSubmenu');
         
         if (maintenanceToggle && maintenanceSubmenu) {
-            maintenanceSubmenu.classList.add('show');
-            maintenanceToggle.classList.add('expanded');
-            
             maintenanceToggle.addEventListener('click', (e) => {
                 e.preventDefault();
                 maintenanceSubmenu.classList.toggle('show');
