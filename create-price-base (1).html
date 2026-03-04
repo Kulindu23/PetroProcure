@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Price Base - PetroProcure</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-indigo: #4F46E5;
+            --success-emerald: #10B981;
+            --warning-amber: #F59E0B;
+            --sidebar-width: 220px;
+        }
+        * { 
+            font-family: 'Inter', sans-serif; 
+         }
+
+        body { 
+            background-color: #F9FAFB; 
+            font-weight: 500; 
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            height: 100vh;
+            width: var(--sidebar-width); 
+            background: #fff;
+            border-right: 1px solid #E5E7EB; 
+            overflow-y: auto;
+            display: flex; 
+            flex-direction: column; 
+            z-index: 1000;
+        }
+
+        .sidebar-logo { 
+            padding: 1.25rem 1rem; 
+            flex-shrink: 0; 
+        
+        }
+        .sidebar-logo h5 { 
+            font-weight: 900; 
+            color: var(--primary-indigo); 
+            margin: 0; 
+            font-size: 1rem; 
+        }
+
+        .sidebar-logo p { 
+            font-size: 0.65rem; 
+            color: #9CA3AF; 
+            margin: 0; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+        }
+
+        .sidebar-menu { 
+            padding: 0.5rem 0; 
+            flex: 1; 
+            overflow-y: auto; 
+        }
+
+        .menu-item {
+            padding: 0.65rem 1rem; 
+            color: #6B7280; 
+            text-decoration: none;
+            display: flex; 
+            align-items: center; 
+            gap: 0.65rem; 
+            transition: all 0.2s;
+            margin: 0.15rem 0.4rem; 
+            border-radius: 0.5rem; 
+            font-size: 0.82rem;
+        }
+
+        .menu-item:hover { 
+            background-color: #F3F4F6; 
+            color: var(--primary-indigo); 
+        }
+
+        .menu-item.active { 
+            background-color: #EEF2FF; 
+            color: var(--primary-indigo); 
+            font-weight: 700; }
+
+        .menu-item i { 
+            font-size: 1rem; 
+            width: 18px; 
+            text-align: center; 
+        }
+
+        .submenu { 
+            max-height: 0; 
+            overflow: hidden; 
+            transition: max-height 0.3s ease-out; 
+            padding-left: 2rem; 
+        }
+
+        .submenu.show { 
+            max-height: 500px; 
+        }
+
+        .submenu .menu-item { 
+            padding: 0.45rem 0.75rem; 
+            font-size: 0.8rem; 
+        }
+
+        .menu-item i.bi-chevron-down { 
+            transition: transform 0.3s; 
+        }
+
+        .menu-item.expanded i.bi-chevron-down { 
+            transform: rotate(180deg); 
+        }
+
+        .sidebar-footer { 
+            padding: 0.85rem; 
+            border-top: 1px solid #E5E7EB; 
+        }
+
+        .user-label { 
+            font-size: 0.6rem; 
+            color: #9CA3AF; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+            font-weight: 600; 
+        }
+
+        .user-avatar {
+            width: 34px; 
+            height: 34px; 
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-indigo), #7C3AED);
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            color: white; 
+            font-weight: 700; 
+            font-size: 0.8rem;
+        }
+
+        .user-details h6 { 
+            margin: 0; 
+            font-weight: 700; 
+            font-size: 0.82rem; 
+            color: #111827; 
+        }
+
+        .user-details p { 
+            margin: 0; 
+            font-size: 0.7rem; 
+            color: #6B7280; 
+        }
+
+        /* MAIN */
+        .main-content { 
+            margin-left: var(--sidebar-width); 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+        }
+
+        .top-header { 
+            background: #F9FAFB; 
+            padding: 1.25rem 2rem; 
+        }
+
+        .page-title { 
+            font-weight: 900; 
+            color: #111827; 
+            margin: 0; 
+            font-size: 1.5rem; 
+        }
+
+        .page-subtitle { 
+            color: #9CA3AF; 
+            font-size: 0.75rem; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+            margin: 0; 
+        }
+
+        .breadcrumb-subtitle { 
+            color: var(--primary-indigo); 
+            font-size: 0.75rem; 
+            text-transform: uppercase; 
+            font-weight: 700; 
+            letter-spacing: 0.5px; 
+            margin: 0; 
+        }
+
+        .back-btn {
+            background: #fff; 
+            border: 1px solid #E5E7EB; 
+            color: #374151;
+            padding: 0.5rem 0.75rem; 
+            border-radius: 0.65rem; 
+            text-decoration: none;
+            display: inline-flex; 
+            align-items: center; 
+            transition: all 0.2s; 
+            font-size: 0.9rem;
+        }
+
+        .back-btn:hover { 
+            border-color: var(--primary-indigo); 
+            color: var(--primary-indigo); 
+        }
+
+        /* CONTENT */
+        .content-area {
+            flex: 1; 
+            padding: 0 2rem 2rem;
+            display: flex; 
+            justify-content: center;
+        }
+
+        .form-card {
+            background: #fff; 
+            border-radius: 1.5rem; 
+            padding: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06); 
+            border: 1px solid #E5E7EB;
+            width: 100%; 
+            max-width: 860px;
+        }
+
+        .form-card h2 { 
+            font-weight: 800; 
+            font-size: 1.2rem; 
+            color: #111827; 
+            margin-bottom: 0.25rem; 
+        }
+
+        .form-card > p { 
+            color: #6B7280; 
+            font-size: 0.85rem; 
+            margin-bottom: 0; 
+        
+     }
+
+        .form-label {
+            font-weight: 700; 
+            color: #374151; 
+            margin-bottom: 0.4rem;
+            font-size: 0.75rem; 
+            text-transform: uppercase; 
+            letter-spacing: 0.3px; 
+            display: block;
+        }
+
+        .form-label .required { 
+            color: #DC2626; 
+            margin-left: 3px; 
+        }
+
+        .form-control, .form-select {
+            border: 1px solid #D1D5DB; 
+            border-radius: 0.65rem;
+            padding: 0.7rem 0.9rem; 
+            font-size: 0.9rem; 
+            transition: all 0.2s;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-indigo); 
+            box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+        }
+
+        .form-control.error-field { 
+            border-color: #DC2626 !important; 
+        }
+
+        textarea.form-control { 
+            min-height: 110px; 
+            resize: vertical; 
+        }
+
+        .link-text { color: var(--primary-indigo); 
+            font-size: 0.75rem; 
+            font-weight: 700; 
+            cursor: pointer; 
+            text-decoration: none; 
+            text-transform: uppercase;
+         }
+
+        .link-text:hover { 
+            text-decoration: underline; 
+        }
+
+        /* TOGGLE */
+        .toggle-container { 
+            background: #F8FAFC; 
+            border: 1px solid #E2E8F0; 
+            border-radius: 0.75rem; 
+            padding: 1rem 1.25rem; 
+        }
+
+        .toggle-label { 
+            font-size: 0.82rem; 
+            color: #000; 
+            font-weight: 600; 
+            margin-bottom: 0.15rem; 
+        }
+
+
+        .toggle-description { 
+            font-size: 0.7rem; 
+            color: #64748B; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+        }
+
+        /* ACTIONS */
+        .form-actions { display: flex; 
+            gap: 1rem; 
+            justify-content: flex-end; 
+            margin-top: 2rem; 
+            padding-top: 1.5rem; 
+            border-top: 1px solid #E5E7EB; 
+        }
+
+        .btn-cancel {
+            background: #fff; 
+            border: 1px solid #D1D5DB; 
+            color: #374151;
+            padding: 0.75rem 1.75rem; 
+            border-radius: 0.65rem; 
+            font-weight: 600; 
+            font-size: 0.9rem; 
+            transition: all 0.2s; 
+            cursor: pointer;
+        }
+
+        .btn-cancel:hover { 
+            background: #F9FAFB;
+             border-color: #9CA3AF; 
+            }
+
+        .btn-save {
+            background: linear-gradient(135deg, var(--primary-indigo), #6366F1);
+            border: none; 
+            color: white; 
+            padding: 0.75rem 2rem;
+            border-radius: 0.65rem; 
+            font-weight: 600; 
+            font-size: 0.9rem;
+            display: inline-flex; 
+            align-items: center; 
+            gap: 0.4rem; 
+            transition: all 0.2s; 
+            cursor: pointer;
+        }
+
+        .btn-save:hover { 
+            transform: translateY(-1px); 
+            box-shadow: 0 6px 16px rgba(79,70,229,0.3); 
+        }
+
+        /* ERROR */
+        .error-message { 
+            color: #DC2626; 
+            font-size: 0.75rem; 
+            margin-top: 0.35rem; 
+            font-weight: 600; 
+            display: none; 
+        }
+
+        .error-message.show { 
+            display: block; 
+        }
+
+        /* TOAST */
+        .toast-container { 
+            position: fixed; 
+            top: 1.5rem; 
+            right: 1.5rem; 
+            z-index: 9999; 
+        }
+
+        .toast-custom {
+            background: #fff; 
+            border: 1px solid #E5E7EB; 
+            border-radius: 0.75rem;
+            padding: 1rem 1.25rem; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+            display: flex; 
+            align-items: center; 
+            gap: 0.75rem; 
+            min-width: 280px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn { from { opacity:0; transform: translateX(20px); } to { opacity:1; transform: translateX(0); } }
+        .toast-icon { 
+            width: 32px; 
+            height: 32px; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            flex-shrink: 0; 
+        }
+
+        .toast-success .toast-icon { 
+            background: #D1FAE5; 
+            color: #059669; 
+        }
+        .toast-text h6 { 
+            font-weight: 700; 
+            font-size: 0.85rem; 
+            margin: 0 0 0.1rem; 
+            color: #111827; 
+        }
+
+        .toast-text p { 
+            font-size: 0.75rem; 
+            color: #6B7280; 
+            margin: 0;
+         }
+
+    </style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <div class="sidebar-logo">
+        <div class="d-flex align-items-center gap-2">
+            <div style="background:#4F46E5; color:white; border-radius:0.5rem; width:32px; height:32px; display:flex; align-items:center; justify-content:center;">
+                <strong style="font-size:0.8rem;">PP</strong>
+            </div>
+            <div>
+                <h5>PetroProcure</h5>
+                <p>E-PROCUREMENT V2</p>
+            </div>
+        </div>
+    </div>
+    <div class="sidebar-menu">
+        <a href="#" class="menu-item">
+            <i class="bi bi-grid"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="#" class="menu-item">
+            <i class="bi bi-shield-check"></i>
+            <span>Accessibility</span>
+            <i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+
+        <a href="#" class="menu-item expanded" id="maintenanceToggle">
+            <i class="bi bi-wrench"></i>
+            <span>Maintenance</span>
+            <i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <div class="submenu show" id="maintenanceSubmenu">
+            <a href="#" class="menu-item">
+                <i class="bi bi-layers"></i>
+                <span>Product Category</span>
+            </a>
+            <a href="#" class="menu-item active">
+                <i class="bi bi-database"></i>
+                <span>Price Base</span>
+            </a>
+            <a href="#" class="menu-item">
+                <i class="bi bi-box"></i>
+                <span>Product</span>
+            </a>
+            <a href="#" class="menu-item">
+                <i class="bi bi-gear"></i>
+                <span>Product Specification</span>
+            </a>
+            <a href="#" class="menu-item">
+                <i class="bi bi-pin-map"></i>
+                <span>Local Agent</span>
+            </a>
+            <a href="#" class="menu-item">
+                <i class="bi bi-building"></i>
+                <span>Supplier</span>
+            </a>
+            <a href="#" class="menu-item"><i class="bi bi-shield-check"></i><span>GTC</span></a>
+        </div>
+
+        <a href="#" class="menu-item" id="workflowToggle">
+            <i class="bi bi-diagram-3"></i>
+            <span>Workflow</span>
+            <i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <div class="submenu" id="workflowSubmenu">
+            <a href="#" class="menu-item">
+                <i class="bi bi-list-ul"></i>
+                <span>Workflow Collection</span>
+            </a>
+            <a href="#" class="menu-item">
+                <i class="bi bi-pencil-square"></i>
+                <span>Define New Workflow</span>
+            </a>
+            <a href="#" class="menu-item">
+                <i class="bi bi-check-circle"></i>
+                <span>Verify Workflow</span>
+            </a>
+        </div>
+
+        <a href="#" class="menu-item" id="tenderToggle">
+            <i class="bi bi-file-earmark-text"></i>
+            <span>Tender</span>
+            <i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <div class="submenu" id="tenderSubmenu">
+            <a href="#" class="menu-item">
+                <i class="bi bi-layers"></i>
+                <span>Tender Collection</span>
+            </a>
+            <a href="#" class="menu-item">
+                <i class="bi bi-plus-circle"></i>
+                <span>Create Tender</span></a>
+        </div>
+
+        <a href="#" class="menu-item">
+            <i class="bi bi-check2-square"></i>
+            <span>Verification Processes</span>
+            <i class="bi bi-chevron-down ms-auto"></i></a>
+        <a href="#" class="menu-item">
+            <i class="bi bi-bar-chart"></i>
+            <span>Bid Statistic</span>
+        </a>
+    </div>
+    <div class="sidebar-footer">
+        <div class="user-label">Logged in as</div>
+        <div class="d-flex align-items-center gap-2 mt-2">
+            <div class="user-avatar">A</div>
+            <div class="user-details">
+                <h6>Administrator</h6>
+                <p>Ceypetco</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MAIN -->
+<div class="main-content">
+    <div class="top-header">
+        <h1 class="page-title">Price Base</h1>
+        <p class="page-subtitle">E-PROCUREMENT PIPELINE MANAGEMENT</p>
+        <div class="d-flex align-items-center gap-3 mt-4">
+            <a href="#" class="back-btn"><i class="bi bi-chevron-left"></i></a>
+            <div>
+                <h1 class="page-title">Define Price Base</h1>
+                <p class="breadcrumb-subtitle">MAINTENANCE / PRICE BASE</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-area">
+        <div class="form-card">
+            <h2>Price Base Configuration</h2>
+            <p>Define core identity and market linkage</p>
+
+            <div class="row g-4 mt-1">
+                <!-- LEFT -->
+                <div class="col-md-6">
+                    <!-- Type -->
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <label class="form-label mb-0">PRICE BASE TYPE <span class="required">*</span></label>
+                            <a href="#" class="link-text" id="toggleTypeBtn">SELECT EXISTING</a>
+                        </div>
+                        <input type="text" class="form-control" id="typeInput" placeholder="e.g., PLATT_SPOT" style="text-transform:uppercase;">
+                        <select class="form-select mt-2" id="typeSelect" style="display:none;">
+                            <option value="">Select type...</option>
+                            <option value="MOPS">MOPS</option>
+                            <option value="MOPAG">MOPAG</option>
+                            <option value="PLATT">PLATT</option>
+                        </select>
+                    </div>
+
+                    <!-- Code -->
+                    <div class="mb-3">
+                        <label class="form-label">PRICE BASE CODE <span class="required">*</span></label>
+                        <input type="text" class="form-control" id="priceBaseCode" placeholder="e.g., PGAEY00" style="text-transform:uppercase; font-family:'JetBrains Mono',monospace;">
+                        <div class="error-message" id="codeError">PRICE BASE CODE IS REQUIRED.</div>
+                    </div>
+
+                    <!-- Name -->
+                    <div class="mb-3">
+                        <label class="form-label">PRICE BASE NAME <span class="required">*</span></label>
+                        <input type="text" class="form-control" id="priceBaseName" placeholder="e.g., MOPS - GASOLINE 92">
+                        <div class="error-message" id="nameError">PRICE BASE NAME IS REQUIRED.</div>
+                    </div>
+
+                    <!-- Status -->
+                    <div class="toggle-container mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="toggle-label">OPERATIONAL STATUS</div>
+                                <div class="toggle-description">IS THIS INDEX ACTIVE IN THE SYSTEM?</div>
+                            </div>
+                            <div class="form-check form-switch mb-0">
+                                <input class="form-check-input" type="checkbox" id="statusToggle" checked style="width:3rem; height:1.5rem; cursor:pointer;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT -->
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">SINGLE DESCRIPTION</label>
+                        <textarea class="form-control" id="singleDesc" placeholder="Description for spot/single tenders..."></textarea>
+                        <div class="error-message" id="singleDescError">SINGLE DESCRIPTION IS REQUIRED.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">TERM DESCRIPTION</label>
+                        <textarea class="form-control" id="termDesc" placeholder="Description for long-term supply contracts..."></textarea>
+                        <div class="error-message" id="termDescError">TERM DESCRIPTION IS REQUIRED.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="form-actions">
+                <button class="btn-cancel" onclick="window.location.href='#'">Cancel</button>
+                <button class="btn-save" onclick="createIndex()">
+                    <i class="bi bi-floppy"></i> Create Index
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Submenu toggles
+    function setupToggle(toggleId, submenuId, defaultOpen) {
+        const btn = document.getElementById(toggleId);
+        const menu = document.getElementById(submenuId);
+        if (!btn || !menu) return;
+        if (defaultOpen) { menu.classList.add('show'); btn.classList.add('expanded'); }
+        btn.addEventListener('click', e => {
+            e.preventDefault();
+            menu.classList.toggle('show');
+            btn.classList.toggle('expanded');
+        });
+    }
+    setupToggle('maintenanceToggle', 'maintenanceSubmenu', true);
+    setupToggle('workflowToggle', 'workflowSubmenu', false);
+    setupToggle('tenderToggle', 'tenderSubmenu', false);
+
+    // Type toggle (create page: default is text input, switch to select)
+    let showingSelect = false;
+    document.getElementById('toggleTypeBtn').addEventListener('click', e => {
+        e.preventDefault();
+        showingSelect = !showingSelect;
+        document.getElementById('typeInput').style.display = showingSelect ? 'none' : 'block';
+        document.getElementById('typeSelect').style.display = showingSelect ? 'block' : 'none';
+        document.getElementById('toggleTypeBtn').textContent = showingSelect ? 'ADD NEW TYPE' : 'SELECT EXISTING';
+    });
+
+    // Uppercase
+    document.querySelectorAll('input[style*="uppercase"]').forEach(input => {
+        input.addEventListener('input', function() { this.value = this.value.toUpperCase(); });
+    });
+
+    // Validation
+    function validate() {
+        let valid = true;
+        const fields = [
+            { id: 'priceBaseCode', errId: 'codeError', msg: 'PRICE BASE CODE IS REQUIRED.' },
+            { id: 'priceBaseName', errId: 'nameError', msg: 'PRICE BASE NAME IS REQUIRED.' },
+            { id: 'singleDesc', errId: 'singleDescError', msg: 'SINGLE DESCRIPTION IS REQUIRED.' },
+            { id: 'termDesc', errId: 'termDescError', msg: 'TERM DESCRIPTION IS REQUIRED.' }        
+        ];
+        fields.forEach(f => {
+            const el = document.getElementById(f.id);
+            const err = document.getElementById(f.errId);
+            if (!el.value.trim()) {
+                el.classList.add('error-field');
+                err.classList.add('show');
+                valid = false;
+            } else {
+                el.classList.remove('error-field');
+                err.classList.remove('show');
+            }
+            el.addEventListener('input', () => { el.classList.remove('error-field'); err.classList.remove('show'); });
+        });
+        const typeErr = document.getElementById('typeError');
+        const typeVal = showingSelect ? document.getElementById('typeSelect').value : document.getElementById('typeInput').value;
+        if (!typeVal) { typeErr.classList.add('show'); valid = false; }
+        else { typeErr.classList.remove('show'); }
+        return valid;
+    }
+
+    function createIndex() {
+        if (!validate()) return;
+        showToast('success', 'Index Created', 'Price Base Index has been created successfully.');
+        setTimeout(() => { window.location.href = '#'; }, 1800);
+    }
+
+    function showToast(type, title, msg) {
+        const container = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        toast.className = `toast-custom toast-${type}`;
+        toast.innerHTML = `
+            <div class="toast-icon"><i class="bi bi-check-lg"></i></div>
+            <div class="toast-text"><h6>${title}</h6><p>${msg}</p></div>
+            <button type="button" style="background:none;border:none;color:#9CA3AF;cursor:pointer;margin-left:auto;" onclick="this.parentElement.remove()"><i class="bi bi-x"></i></button>
+        `;
+        container.appendChild(toast);
+        setTimeout(() => { if (toast.parentElement) toast.remove(); }, 4000);
+    }
+</script>
+</body>
+</html>
