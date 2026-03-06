@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workflow Details - PetroProcure</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-indigo: #4F46E5;
+            --primary-light: #EEF2FF;
+            --primary-dark: #3730A3;
+            --success-emerald: #10B981;
+            --warning-amber: #F59E0B;
+            --danger-rose: #F43F5E;
+            --surface-bg: #F8FAFC;
+            --sidebar-width: 270px;
+            --border-color: #E5E7EB;
+        }
+
+        * { 
+            font-family: 'Inter', sans-serif; 
+            box-sizing: border-box; 
+        }
+
+        body { 
+            background-color: var(--surface-bg); 
+            font-weight: 500; 
+            margin: 0; 
+        }
+
+        /*  SIDEBAR  */
+        .sidebar {
+            position: fixed; 
+            top: 0; 
+            left: 0;
+            height: 100vh; 
+            width: var(--sidebar-width);
+            background: #fff; 
+            border-right: 1px solid var(--border-color);
+            display: flex; 
+            flex-direction: column; 
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .sidebar-logo { 
+            padding: 1.25rem 1rem; 
+            border-bottom: 1px solid #F3F4F6; 
+            flex-shrink: 0; 
+        }
+
+        .sidebar-logo h5 { 
+            font-weight: 900; 
+            color: #111827; 
+            margin: 0; 
+            font-size: 1rem; 
+        }
+
+        .sidebar-logo p { 
+            font-size: 0.65rem; 
+            color: #9CA3AF; 
+            margin: 0; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px;
+         }
+
+        .sidebar-menu { 
+            flex: 1; 
+            overflow-y: auto; 
+            padding: 0.75rem 0; 
+        }
+
+        .menu-item {
+            padding: 0.65rem 1rem; 
+            color: #6B7280; 
+            text-decoration: none;
+            display: flex; 
+            align-items: center; 
+            gap: 0.65rem;
+            transition: all 0.2s; 
+            margin: 0.15rem 0.5rem;
+            border-radius: 0.5rem; 
+            font-size: 0.85rem;
+        }
+
+        .menu-item:hover { 
+            background: #F3F4F6; 
+            color: var(--primary-indigo);
+         }
+
+        .menu-item.active { 
+            background: var(--primary-light); 
+            color: var(--primary-indigo); 
+            font-weight: 700; 
+        }
+
+        .menu-item i { 
+            font-size: 1rem; 
+            width: 18px; 
+            text-align: center; 
+        }
+
+        .menu-item i.bi-chevron-down { 
+            transition: transform 0.3s ease; 
+            width: auto; 
+            margin-left: auto; 
+            font-size: 0.75rem;
+         }
+
+        .menu-item.expanded i.bi-chevron-down { 
+            transform: rotate(180deg);
+         }
+
+        .menu-item-wf-parent {
+            padding: 0.65rem 1rem; 
+            color: var(--primary-indigo); 
+            text-decoration: none;
+            display: flex; 
+            align-items: center; 
+            gap: 0.65rem;
+            margin: 0.15rem 0.5rem; 
+            border-radius: 0.5rem; 
+            font-size: 0.85rem;
+            background: var(--primary-light); 
+            font-weight: 700;
+        }
+
+        .menu-item-wf-parent i.main-icon { 
+            font-size: 1rem; 
+            width: 18px; 
+            text-align: center; 
+        }
+
+        .menu-item-wf-parent i.chevron { 
+            width: auto; 
+            margin-left: auto; 
+            font-size: 0.75rem;
+            transition: transform 0.3s ease; 
+        }
+
+        .menu-item-wf-parent.open i.chevron { 
+            transform: rotate(180deg); 
+        }
+
+        .submenu { 
+            max-height: 0; 
+            overflow: hidden; 
+            transition: max-height 0.3s ease-out; 
+            padding-left: 2.25rem; 
+        }
+
+        .submenu.show { 
+            max-height: 600px; 
+            transition: max-height 0.3s ease-in;
+         }
+
+        .submenu .menu-item { 
+            padding: 0.45rem 1rem; 
+            font-size: 0.8rem; 
+        }
+
+        .user-info-block { 
+            padding: 0.75rem; 
+            border-top: 1px solid var(--border-color); 
+            flex-shrink: 0; }
+
+        .user-label { 
+            font-size: 0.6rem; 
+            color: #9CA3AF; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+            font-weight: 600; 
+            margin-bottom: 0.4rem; }
+
+        .user-avatar {
+            width: 34px; 
+            height: 34px; 
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-indigo), #7C3AED);
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            color: #fff; 
+            font-weight: 700; 
+            font-size: 0.75rem; 
+            flex-shrink: 0;
+        }
+        .user-details h6 { 
+            margin: 0; 
+            font-weight: 700; 
+            font-size: 0.85rem; 
+            color: #111827; }
+
+        .user-details p { 
+            margin: 0; 
+            font-size: 0.7rem; 
+            color: #6B7280; }
+
+        /*  MAIN LAYOUT  */
+        .main-content { 
+            margin-left: var(--sidebar-width); 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; }
+
+        .top-header { 
+            background: #F8FAFC; 
+            padding: 1rem 2rem; 
+            position: sticky; 
+            top: 0; 
+            z-index: 999; }
+
+        .page-title { 
+            font-weight: 900; 
+            color: #111827; 
+            margin: 0; 
+            font-size: 1.6rem; }
+
+        .page-subtitle { 
+            color: #9CA3AF; 
+            font-size: 0.75rem; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+            margin: 0; }
+
+        .content-area { 
+            flex: 1; 
+            padding: 1.5rem 2rem; }
+
+        .main-footer { 
+            background: #fff; 
+            border-top: 1px solid var(--border-color); 
+            padding: 1rem 2rem; 
+            margin-top: auto; }
+
+        /*  SUBHEADER */
+        .back-btn {
+            width: 32px; 
+            height: 32px; 
+            background: #fff;
+            border: 1px solid var(--border-color); 
+            border-radius: 0.5rem;
+            display: inline-flex; 
+            align-items: center; 
+            justify-content: center;
+            color: #6B7280; 
+            cursor: pointer; 
+            text-decoration: none;
+            transition: all 0.2s; 
+            flex-shrink: 0;
+        }
+        .back-btn:hover { 
+            background: var(--primary-light); 
+            border-color: var(--primary-indigo); 
+            color: var(--primary-indigo); }
+
+        .wf-main-title { 
+            font-weight: 900; 
+            color: #111827; 
+            font-size: 1.75rem; 
+            margin: 0; }
+
+        .badge-draft-pill {
+            background: #FEF3C7; 
+            color: #92400E; 
+            border: 1px solid #FCD34D;
+            padding: 0.25rem 0.8rem; 
+            border-radius: 2rem;
+            font-size: 0.68rem; 
+            font-weight: 700; 
+            letter-spacing: 0.5px; 
+            text-transform: uppercase;
+        }
+
+        .wf-sub-label { 
+            color: var(--primary-indigo); 
+            font-size: 0.72rem; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+            margin: 0; }
+
+        /* stat chip */
+        .stat-chip {
+            background: #fff; 
+            border: 1px solid var(--border-color); 
+            border-radius: 0.6rem;
+            padding: 0.35rem 0.9rem; 
+            align-items: center; 
+            display: flex; 
+            gap: 1.25rem;
+        }
+        .stat-item { 
+            display: flex; 
+            flex-direction: column; }
+
+        .stat-chip-divider { 
+            width: 1px; 
+            height: 26px; 
+            background: #D1D5DB; }
+
+        .stat-chip .chip-label { 
+            font-size: 0.58rem; 
+            color: #9CA3AF; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+            font-weight: 600; 
+            margin-bottom: 0.2rem; 
+            display: block; }
+
+        .stat-chip .chip-value { 
+            font-size: 0.82rem; 
+            font-weight: 700; 
+            color: var(--primary-indigo); }
+
+        .body-grid { 
+            display: grid; 
+            grid-template-columns: 300px 1fr; 
+            gap: 1.5rem; 
+            align-items: start; }
+
+        /*  LEFT PANEL  */
+        .panel-card {
+            background: #fff; 
+            border-radius: 1rem; 
+            border: 1px solid var(--border-color);
+            padding: 1.25rem 1.5rem;
+        }
+        .panel-section-title { 
+            font-size: 0.9rem; 
+            font-weight: 800; 
+            color: #111827; 
+            margin-bottom: 0.2rem; }
+
+        .panel-section-sub { 
+            font-size: 0.78rem; 
+            color: #9CA3AF; 
+            margin-bottom: 1.4rem; }
+
+        .info-field { 
+            margin-bottom: 0; }
+
+        .info-label { 
+            font-size: 0.63rem; 
+            color: #9CA3AF; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+            font-weight: 600; 
+            margin-bottom: 0.2rem; 
+            display: block; }
+
+        .info-value-text { 
+            font-size: 0.88rem; 
+            font-weight: 600; 
+            color: #111827; 
+            padding-bottom: 0.85rem; 
+            border-bottom: 1px solid var(--border-color); 
+            display: block; 
+            margin-bottom: 0.85rem; }
+
+        .info-value-desc {
+            font-style: italic; 
+            font-size: 0.78rem; 
+            font-weight: 400; 
+            color: #374151;
+            line-height: 1.55; 
+            border: 1px solid var(--border-color); 
+            border-radius: 0.8rem;
+            padding: 0.6rem 0.75rem; 
+            margin-top: 0.2rem; 
+            display: block;
+            background-color: var(--surface-bg);
+        }
+
+        /* engine banner */
+        .engine-banner {
+            background: var(--primary-indigo); 
+            border-radius: 0.8rem;
+            padding: 0.9rem 1rem; 
+            display: flex; 
+            align-items: flex-start; 
+            gap: 0.6rem;
+            margin-top: 1rem;
+        }
+        .engine-banner > i { 
+            color: #ffffff; 
+            font-size: 1rem; 
+            flex-shrink: 0; 
+            margin-top: 0.05rem;
+            border: 1.5px solid rgba(255, 255, 255, 0.35);
+            border-radius: 0.5rem;
+             width: 30px;
+             height: 30px; 
+            align-items: center;
+            justify-content: center;
+            display: flex;
+         }
+
+        .engine-banner-inner { 
+            display: flex; 
+            flex-direction: column; }
+
+        .engine-banner-label { 
+            font-size: 0.58rem; 
+            color: #fff; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+            font-weight: 700; 
+            margin-bottom: 0.15rem; }
+
+        .engine-banner-text { 
+            font-size: 0.72rem; 
+            color: #d2d3f7; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            letter-spacing: 0.3px; 
+            line-height: 1.35; }
+
+        /* audit section */
+        .audit-hr { 
+            border: none; 
+            border-top: 1px solid var(--border-color); 
+            margin: 1.25rem 0 1rem; }
+
+        .audit-head { 
+            display: flex; 
+            align-items: center; 
+            gap: 0.4rem; 
+            font-size: 0.8rem; 
+            font-weight: 800; 
+            color: #111827; 
+            margin-bottom: 1rem;
+         }
+
+        .audit-head i { 
+            color: #98999b; 
+            font-size: 0.9rem; 
+            border: 1px solid var(--border-color);
+            border-radius: 0.4rem;
+            background-color: var(--surface-bg);
+            padding: 0.25rem;
+         }
+
+        .created-label { 
+            font-size: 0.63rem; 
+            color: #9CA3AF; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+            font-weight: 600; 
+            margin-bottom: 0.4rem; 
+            display: block; }
+
+        .creator-row { 
+            display: flex; 
+            align-items: flex-start; 
+            gap: 0.55rem; 
+            margin-bottom: 1rem; }
+
+        .creator-avatar {
+            width: 26px; 
+            height: 26px; 
+            border-radius: 50%;
+            background: var(--border-color);
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            color: var(--primary-indigo); 
+            font-size: 0.58rem; 
+            font-weight: 700; 
+            flex-shrink: 0;
+        }
+        .creator-name { 
+            font-size: 0.8rem; 
+            font-weight: 700; 
+            color: #111827; 
+            line-height: 1.2; }
+
+        .creator-date { 
+            font-size: 0.68rem; 
+            color: #9CA3AF; }
+
+        .justification-label { 
+            font-size: 0.63rem; 
+            color: #9CA3AF; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+            font-weight: 600; 
+            margin-bottom: 0.3rem; 
+            display: block; }
+
+        .justification-text { 
+            font-size: 0.78rem; 
+            font-weight: 500; 
+            color: #374151; 
+            line-height: 1.55; }
+
+        .steps-section-title { 
+            font-size: 0.95rem; 
+            font-weight: 800; 
+            color: #111827; 
+            margin-bottom: 0.1rem; }
+
+        .steps-section-sub { 
+            font-size: 0.63rem; 
+            color: #9CA3AF; 
+            text-transform: uppercase;
+             letter-spacing: 0.5px; 
+             margin-bottom: 1.5rem; }
+
+        /* timeline */
+        .steps-timeline { 
+            position: relative; 
+            padding-left: 26px; }
+
+        .steps-timeline::before {
+            content: ''; 
+            position: absolute;
+            left: 4px; 
+            top: 10px; 
+            bottom: 60px;
+            width: 2px; 
+            background: #E5E7EB; 
+            z-index: 0;
+        }
+
+        .step-wrapper { 
+            position: relative; 
+            margin-bottom: 1.25rem; }
+
+        .step-wrapper::before {
+            content: ''; 
+            position: absolute;
+            left: -24px; 
+            top: 20px;
+            width: 10px; 
+            height: 10px;
+            background: var(--primary-indigo); 
+            border-radius: 50%;
+            border: 2px solid #F8FAFC;
+            box-shadow: 0 0 0 2px var(--primary-indigo);
+            z-index: 1;
+        }
+
+        .step-card {
+            background: #fff; 
+            border: 1px solid var(--border-color);
+            border-radius: 1rem; 
+            padding: 1.1rem 1.25rem;
+            transition: box-shadow 0.2s;
+        }
+        .step-card:hover { 
+            box-shadow: 0 4px 20px rgba(79,70,229,0.09); }
+
+        /* top row */
+        .step-top-row {
+            display: flex; 
+            align-items: center; 
+            gap: 0.85rem;
+            margin-bottom: 1rem; 
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .step-num-circle {
+            display: inline-flex; 
+            align-items: center; 
+            justify-content: center;
+            width: 36px; 
+            height: 36px; 
+            border-radius: 0.55rem;
+            background: #1E1B4B; 
+            color: #fff;
+            font-weight: 900; 
+            font-size: 1rem; 
+            flex-shrink: 0;
+            transition: background 0.2s;
+        }
+        .step-top-meta { 
+            flex: 1; 
+            min-width: 0; }
+
+        .step-small-lbl { 
+            font-size: 0.58rem; 
+            color: var(--primary-indigo); 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+            font-weight: 700; 
+            margin-bottom: 0.12rem; }
+
+        .step-title-lbl { 
+            font-size: 1rem; 
+            font-weight: 800; 
+            color: #111827;
+             margin: 0; }
+
+        .step-cat-block { 
+            text-align: right; 
+            flex-shrink: 0; }
+        .step-cat-lbl { 
+            font-size: 0.58rem; 
+            color: #9CA3AF; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+            font-weight: 600; 
+            display: block; 
+            margin-bottom: 0.08rem; }
+        .step-cat-val { 
+            font-size: 0.7rem; 
+            font-weight: 800; 
+            
+            color: #374151; 
+            text-transform: uppercase; 
+            letter-spacing: 0.3px; }
+        
+        .step-category-badge {
+            font-size: 0.58rem; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px;
+            color: #9CA3AF; 
+            text-align: left; 
+            white-space: nowrap;
+            border: 1px solid var(--border-color);
+            border-radius: 0.4rem;
+            padding: 0.2rem 0.6rem;
+            background: #F9FAFB;
+             
+        }
+
+        /* body row */
+        .step-body-row { 
+            display: flex; 
+            align-items: flex-start; 
+            justify-content: space-between; 
+            gap: 1.5rem; }
+
+        .step-body-left { 
+            flex: 1; 
+            min-width: 0; }
+
+        .step-field-lbl { 
+            font-size: 0.58rem; 
+            color: #9CA3AF; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+            font-weight: 700; 
+            margin-bottom: 0.3rem; 
+            margin-top: 0; }
+
+        /* role pill */
+        .role-pill {
+            display: inline-flex; 
+            align-items: center; 
+            gap: 0.3rem;
+            background: var(--primary-light); 
+            border: 1px solid #C7D2FE;
+            color: var(--primary-indigo); 
+            padding: 0.22rem 0.72rem;
+            border-radius: 0.5rem; 
+            font-size: 0.67rem; 
+            font-weight: 700;
+            text-transform: uppercase; 
+            letter-spacing: 0.3px; 
+            margin-bottom: 0.85rem;
+        }
+        .role-pill i { 
+            font-size: 0.67rem; }
+
+        .verifier-tags { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 0.4rem; }
+
+        .verifier-tag {
+            background: #F9FAFB; 
+            border: 1px solid var(--border-color);
+            color: #374151; 
+            padding: 0.2rem 0.65rem;
+            border-radius: 0.4rem; 
+            font-size: 0.7rem; 
+            font-weight: 600;
+        }
+
+        
+        .approvals-box {
+            background: linear-gradient(135deg, var(--primary-indigo), #6366F1);
+            border-radius: 1rem; 
+            padding: 1rem 1.25rem;
+            display: flex; 
+            flex-direction: row; 
+            align-items: center; 
+            gap: 1rem;
+            box-shadow: 0 8px 24px rgba(79,70,229,0.3);
+            min-width: 240px; 
+            flex-shrink: 0;
+        }
+
+        .appr-left { display: flex; flex-direction: column; align-items: flex-start; flex-shrink: 0; }
+        .appr-req-lbl { 
+            font-size: 0.54rem; 
+            color: #A5B4FC; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; font-weight: 700; display: block; margin-bottom: 0.02rem; }
+        .appr-req-num { font-size: 2rem; font-weight: 900; color: #fff; line-height: 1; }
+        .appr-divider { width: 1px; height: 40px; background: rgba(255,255,255,0.28); flex-shrink: 0; }
+        .appr-right { display: flex; flex-direction: column; }
+        .appr-title { font-size: 0.63rem; font-weight: 700; color: #C7D2FE; text-transform: uppercase; letter-spacing: 0.3px; display: block; margin-bottom: 0.28rem; }
+        .appr-desc { font-size: 0.73rem; color: #A5B4FC; line-height: 1.4; }
+
+        /* end marker */
+        .end-marker-row { display: flex; justify-content: center; margin-top: 0.75rem; }
+        .end-marker {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            font-size: 0.63rem; color: #9CA3AF; text-transform: uppercase;
+            letter-spacing: 0.9px; font-weight: 600;
+            border: 1px dashed #D1D5DB; border-radius: 2rem;
+            padding: 0.35rem 1.1rem;
+        }
+        .end-marker i { font-size: 0.85rem; color: #9CA3AF; }
+
+        @media (max-width: 1100px) { .body-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { .main-content { margin-left: 0; } }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <div class="sidebar-logo">
+        <div class="d-flex align-items-center gap-2">
+            <div class="bg-primary text-white rounded-3 d-flex align-items-center justify-content-center"
+                 style="width:34px;height:34px;flex-shrink:0;">
+                <strong style="font-size:0.8rem;">PP</strong>
+            </div>
+            <div>
+                <h5>PetroProcure</h5>
+                <p>E-PROCUREMENT V2</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="sidebar-menu">
+        <a href="#" class="menu-item"><i class="bi bi-grid"></i><span>Dashboard</span></a>
+
+        <a href="#" class="menu-item" id="accessibilityToggle">
+            <i class="bi bi-shield-check"></i><span>Accessibility</span><i class="bi bi-chevron-down"></i>
+        </a>
+        <div class="submenu" id="accessibilitySubmenu">
+            <a href="#" class="menu-item"><i class="bi bi-person-lock"></i><span>Role Management</span></a>
+            <a href="#" class="menu-item"><i class="bi bi-key"></i><span>Permissions</span></a>
+        </div>
+
+        <a href="#" class="menu-item" id="maintenanceToggle">
+            <i class="bi bi-wrench"></i><span>Maintenance</span><i class="bi bi-chevron-down"></i>
+        </a>
+        <div class="submenu" id="maintenanceSubmenu">
+            <a href="#" class="menu-item"><i class="bi bi-layers"></i><span>Product Category</span></a>
+            <a href="#" class="menu-item"><i class="bi bi-database"></i><span>Price Base</span></a>
+            <a href="#" class="menu-item"><i class="bi bi-box-seam"></i><span>Product</span></a>
+            <a href="#" class="menu-item"><i class="bi bi-gear"></i><span>Product Specification</span></a>
+            <a href="#" class="menu-item"><i class="bi bi-suitcase-lg"></i><span>Local Agent</span></a>
+            <a href="#" class="menu-item"><i class="bi bi-truck"></i><span>Supplier</span></a>
+            <a href="#" class="menu-item"><i class="bi bi-shield-check"></i><span>GTC</span></a>
+        </div>
+
+        <a href="#" class="menu-item-wf-parent open" id="workflowToggle">
+            <i class="bi bi-gear main-icon"></i>
+            <span>Workflow</span>
+            <i class="bi bi-chevron-down chevron"></i>
+        </a>
+        <div class="submenu show" id="workflowSubmenu">
+            <a href="workflow-collection.html" class="menu-item"><i class="bi bi-list-ul"></i><span>Workflow Collection</span></a>
+            <a href="workflow-define.html" class="menu-item"><i class="bi bi-pencil-square"></i><span>Define New Workflow</span></a>
+            <a href="workflow-verify.html" class="menu-item"><i class="bi bi-check-circle"></i><span>Verify Workflow</span></a>
+        </div>
+
+        <a href="#" class="menu-item" id="TenderToggle">
+            <i class="bi bi-file-earmark-text"></i>
+            <span>Tender</span>
+            <i class="bi bi-chevron-down"></i>
+        </a>
+        <div class="submenu" id="TenderSubmenu">
+            <a href="#" class="menu-item">
+                <i class="bi bi-layers"></i>
+                <span>Tender Collection</span></a>
+            <a href="#" class="menu-item">
+                <i class="bi bi-plus-circle"></i>
+                <span>Create Tender</span></a>
+        </div>
+
+        <a href="#" class="menu-item" id="verificationToggle">
+            <i class="bi bi-check2-square"></i>
+            <span>Verification Processes</span>
+            <i class="bi bi-chevron-down"></i>
+        </a>
+        <div class="submenu" id="verificationSubmenu">
+            <a href="#" class="menu-item">
+                <i class="bi bi-file-earmark-check"></i>
+                <span>Tender Verification</span>
+            </a>
+            <a href="#" class="menu-item">
+                <i class="bi bi-file-earmark-text"></i>
+                <span>Document Verification</span>
+            </a>
+            <a href="#" class="menu-item">
+                <i class="bi bi-sliders"></i>
+                <span>Evaluation Verification</span>
+            </a>
+        </div>
+
+        <a href="#" class="menu-item"><i class="bi bi-bar-chart"></i><span>Bid Statistic</span></a>
+    </div>
+
+    <div class="user-info-block">
+        <div class="user-label">Logged in as</div>
+        <div class="d-flex align-items-center gap-2 mt-1">
+            <div class="user-avatar">AD</div>
+            <div class="user-details">
+                <h6>Administrator</h6>
+                <p>Ceypetco</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--  MAIN CONTENT  -->
+<div class="main-content">
+
+    <!-- TOP HEADER -->
+    <div class="top-header">
+        <h1 class="page-title">Workflow Details</h1>
+        <p class="page-subtitle">E-PROCUREMENT PIPELINE MANAGEMENT</p>
+    </div>
+
+    <div class="content-area">
+
+        <!-- Subheader -->
+        <div class="d-flex align-items-start justify-content-between mb-3 gap-3 flex-wrap">
+            <div class="d-flex align-items-center gap-3">
+                <a href="workflow-collection.html" class="back-btn" title="Back to Collection">
+                    <i class="bi bi-chevron-left"></i>
+                </a>
+                <div>
+                    <div class="d-flex align-items-center gap-2 mb-1">
+                        <h2 class="wf-main-title">Workflow Details</h2>
+                        <span class="badge-draft-pill">DRAFT</span>
+                    </div>
+                    <p class="wf-sub-label">BLUEPRINT APPROVAL HIERARCHIES</p>
+                </div>
+            </div>
+            <div class="d-flex align-items-center gap-2 mt-1">
+                <div class="stat-chip">
+                    <div class="stat-item">
+                        <span class="chip-label">NODES</span>
+                        <span class="chip-value">4 Sequential Steps</span>
+                    </div>
+                    <div class="stat-chip-divider"></div>
+                    <div class="stat-item">
+                        <span class="chip-label">TOTAL APPROVALS</span>
+                        <span class="chip-value">7 Required</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TWO-COLUMN BODY -->
+        <div class="body-grid">
+
+            <!-- LEFT PANEL-->
+            <div>
+                <div class="panel-card">
+                    <div class="panel-section-title">Structural Logic &amp; Compatibility</div>
+                    <div class="panel-section-sub">Identity and target applicability</div>
+
+                    <span class="info-label">WORKFLOW CATEGORY</span>
+                    <span class="info-value-text">Tender Details Verification</span>
+
+                    <span class="info-label">WORKFLOW NAME</span>
+                    <span class="info-value-text">West-Terminal Spot Protocol</span>
+
+                    <span class="info-label">APPLICABLE PRODUCT TYPE</span>
+                    <span class="info-value-text">Refined &amp; Crude</span>
+
+                    <span class="info-label">APPLICABLE TENDER TYPE</span>
+                    <span class="info-value-text">Single &amp; Term</span>
+
+                    <span class="info-label">LAST REVISION</span>
+                    <span class="info-value-text">2026-01-20</span>
+
+                    <span class="info-label">OPERATIONAL DESCRIPTION</span>
+                    <span class="info-value-desc">
+                        "New technical clearance logic pending higher-level verification for West-Terminal operations."
+                    </span>
+
+                    <!-- Engine Status Banner -->
+                    <div class="engine-banner">
+                        <i class="bi bi-stack"></i>
+                        <div class="engine-banner-inner">
+                            <div class="engine-banner-label">ENGINE STATUS</div>
+                            <div class="engine-banner-text">LOGIC PENDING AUTHORIZED GOVERNANCE VERIFICATION.</div>
+                        </div>
+                    </div>
+
+                    <hr class="audit-hr">
+
+                    <div class="audit-head">
+                        <i class="bi bi-shield-check"></i>
+                        AUDIT &amp; JUSTIFICATION
+                    </div>
+
+                    <span class="created-label">CREATED BY</span>
+                    <div class="creator-row">
+                        <div class="creator-avatar">AS</div>
+                        <div>
+                            <div class="creator-name">Alice Smith</div>
+                            <div class="creator-date">2026-01-20 09:15 AM</div>
+                        </div>
+                    </div>
+
+                    <span class="justification-label">PURPOSE &amp; JUSTIFICATION</span>
+                    <div class="justification-text">
+                        West-Terminal specific crude logic for spot arrivals. Required due to temporary infrastructure adjustments at Terminal 4.
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="steps-section-title">SEQUENTIAL STEPS</div>
+                <div class="steps-section-sub">CHRONOLOGICAL VERIFICATION SEQUENCE</div>
+
+                <div class="steps-timeline">
+
+                    <!-- STEP 1 -->
+                    <div class="step-wrapper">
+                        <div class="step-card">
+                            <div class="step-top-row">
+                                <div class="step-num-circle">1</div>
+                                <div class="step-top-meta">
+                                    <div class="step-small-lbl">STEP TITLE</div>
+                                    <div class="step-title-lbl">Initial Procurement Review</div>
+                                </div>
+                                <div class="step-cat-block">
+                                    <div class="step-category-badge">
+                                    <span class="step-cat-lbl">STEP CATEGORY</span>
+                                    <span class="step-cat-val">REVIEW</span>
+                                </div></div>
+                            </div>
+                            <div class="step-body-row">
+                                <div class="step-body-left">
+                                    <div class="step-field-lbl">TARGET GOVERNANCE ROLE</div>
+                                    <span class="role-pill"><i class="bi bi-shield-check"></i> COMMERCIAL GROUP 04</span>
+                                    <div class="step-field-lbl">WHITELIST AUTHORIZED VERIFIERS</div>
+                                    <div class="verifier-tags">
+                                        <span class="verifier-tag">Katrina Bennett</span>
+                                        <span class="verifier-tag">Jane Smith</span>
+                                    </div>
+                                </div>
+                                <div class="approvals-box mt-4">
+                                    <div class="appr-left">
+                                        <span class="appr-req-lbl">REQUIRED</span>
+                                        <span class="appr-req-num">1</span>
+                                    </div>
+                                    <div class="appr-divider"></div>
+                                    <div class="appr-right">
+                                        <span class="appr-title">REQUIRED APPROVALS</span>
+                                        <span class="appr-desc">Minimum signatures required to advance the cycle.</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 2 -->
+                    <div class="step-wrapper">
+                        <div class="step-card">
+                            <div class="step-top-row">
+                                <div class="step-num-circle">2</div>
+                                <div class="step-top-meta">
+                                    <div class="step-small-lbl">STEP TITLE</div>
+                                    <div class="step-title-lbl">Internal Audit Verification</div>
+                                </div>
+                                <div class="step-cat-block">
+                                    <div class="step-category-badge">
+                                    <span class="step-cat-lbl">STEP CATEGORY</span>
+                                    <span class="step-cat-val">REVIEW</span>
+                                </div> </div>
+                            </div>
+                            <div class="step-body-row">
+                                <div class="step-body-left">
+                                    <div class="step-field-lbl">TARGET GOVERNANCE ROLE</div>
+                                    <span class="role-pill"><i class="bi bi-shield-check"></i> AUDIT DEPT</span>
+                                    <div class="step-field-lbl">WHITELIST AUTHORIZED VERIFIERS</div>
+                                    <div class="verifier-tags">
+                                        <span class="verifier-tag">David Chen</span>
+                                    </div>
+                                </div>
+                                <div class="approvals-box mt-4">
+                                    <div class="appr-left">
+                                        <span class="appr-req-lbl">REQUIRED</span>
+                                        <span class="appr-req-num">1</span>
+                                    </div>
+                                    <div class="appr-divider"></div>
+                                    <div class="appr-right">
+                                        <span class="appr-title">REQUIRED APPROVALS</span>
+                                        <span class="appr-desc">Minimum signatures required to advance the cycle.</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 3 -->
+                    <div class="step-wrapper">
+                        <div class="step-card">
+                            <div class="step-top-row">
+                                <div class="step-num-circle">3</div>
+                                <div class="step-top-meta">
+                                    <div class="step-small-lbl">STEP TITLE</div>
+                                    <div class="step-title-lbl">TC Committee Review</div>
+                                </div>
+                                <div class="step-cat-block">
+                                    <div class="step-category-badge">
+                                    <span class="step-cat-lbl">STEP CATEGORY</span>
+                                    <span class="step-cat-val">APPROVAL</span>
+                                </div> </div>
+                            </div>
+                            <div class="step-body-row">
+                                <div class="step-body-left">
+                                    <div class="step-field-lbl">TARGET GOVERNANCE ROLE</div>
+                                    <span class="role-pill"><i class="bi bi-shield-check"></i> TC MEMBERS</span>
+                                    <div class="step-field-lbl">WHITELIST AUTHORIZED VERIFIERS</div>
+                                    <div class="verifier-tags">
+                                        <span class="verifier-tag">Barbara Jackson</span>
+                                        <span class="verifier-tag">William White</span>
+                                        <span class="verifier-tag">Elizabeth Harris</span>
+                                        <span class="verifier-tag">Richard Martin</span>
+                                    </div>
+                                </div>
+                                <div class="approvals-box mt-4">
+                                    <div class="appr-left">
+                                        <span class="appr-req-lbl">REQUIRED</span>
+                                        <span class="appr-req-num">3</span>
+                                    </div>
+                                    <div class="appr-divider"></div>
+                                    <div class="appr-right">
+                                        <span class="appr-title">REQUIRED APPROVALS</span>
+                                        <span class="appr-desc">Minimum signatures required to advance the cycle.</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 4 -->
+                    <div class="step-wrapper">
+                        <div class="step-card">
+                            <div class="step-top-row">
+                                <div class="step-num-circle">4</div>
+                                <div class="step-top-meta">
+                                    <div class="step-small-lbl">STEP TITLE</div>
+                                    <div class="step-title-lbl">Final Authorization</div>
+                                </div>
+                                <div class="step-cat-block">
+                                    <div class="step-category-badge">
+                                    <span class="step-cat-lbl">STEP CATEGORY</span>
+                                    <span class="step-cat-val">APPROVAL</span>
+                                </div> </div>
+                            </div>
+                            <div class="step-body-row">
+                                <div class="step-body-left">
+                                    <div class="step-field-lbl">TARGET GOVERNANCE ROLE</div>
+                                    <span class="role-pill"><i class="bi bi-shield-check"></i> CHAIRMAN</span>
+                                    <div class="step-field-lbl">WHITELIST AUTHORIZED VERIFIERS</div>
+                                    <div class="verifier-tags">
+                                        <span class="verifier-tag">Joseph Thompson</span>
+                                        <span class="verifier-tag">Susan Garcia</span>
+                                    </div>
+                                </div>
+                                <div class="approvals-box mt-4">
+                                    <div class="appr-left">
+                                        <span class="appr-req-lbl">REQUIRED</span>
+                                        <span class="appr-req-num">2</span>
+                                    </div>
+                                    <div class="appr-divider"></div>
+                                    <div class="appr-right">
+                                        <span class="appr-title">REQUIRED APPROVALS</span>
+                                        <span class="appr-desc">Minimum signatures required to advance the cycle.</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- END MARKER -->
+                    <div class="end-marker-row">
+                        <div class="end-marker">
+                            <i class="bi bi-shield-check"></i>
+                            END OF GOVERNANCE DEFINITION
+                        </div>
+                    </div>
+
+                </div><!-- /steps-timeline -->
+            </div><!-- /right panel -->
+
+        </div><!-- /body-grid -->
+    </div><!-- /content-area -->
+
+    <!-- FOOTER -->
+    <footer class="main-footer">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="text-muted small">© 2024 PetroProcure. All rights reserved.</div>
+            <div class="text-muted small">Version 2.0 | Last Updated: <span id="currentDate"></span></div>
+        </div>
+    </footer>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.getElementById('currentDate').textContent = new Date().toLocaleDateString();
+
+    // Sidebar toggles
+    function setupToggle(toggleId, submenuId, openByDefault = false) {
+        const toggle  = document.getElementById(toggleId);
+        const submenu = document.getElementById(submenuId);
+        if (!toggle || !submenu) return;
+        if (openByDefault) {
+            submenu.classList.add('show');
+            toggle.classList.add('expanded');
+        }
+        toggle.addEventListener('click', e => {
+            e.preventDefault();
+            submenu.classList.toggle('show');
+            toggle.classList.toggle('expanded');
+            // also toggle .open on workflow parent
+            if (toggleId === 'workflowToggle') toggle.classList.toggle('open');
+        });
+    }
+    setupToggle('accessibilityToggle', 'accessibilitySubmenu');
+    setupToggle('maintenanceToggle',   'maintenanceSubmenu');
+    setupToggle('workflowToggle',      'workflowSubmenu', true);
+    setupToggle('TenderToggle',        'TenderSubmenu');
+    setupToggle('verificationToggle',  'verificationSubmenu');
+
+   
+    // Validation check (non-zero approvals)
+    const steps = document.querySelectorAll('.step-card');
+    let totalApprovals = 0;
+    steps.forEach(card => {
+        const n = parseInt(card.querySelector('.appr-req-num')?.textContent || '0');
+        totalApprovals += n;
+    });
+    if (totalApprovals === 0) {
+        console.warn('[PetroProcure] Validation Error: Workflow has 0 total approvals. At least 1 non-zero approval step is required before submission.');
+    } else {
+        console.log('[PetroProcure] Workflow loaded. Total required approvals: ' + totalApprovals);
+    }
+</script>
+</body>
+</html>
