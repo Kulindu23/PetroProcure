@@ -367,6 +367,7 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
             display: block;
+            padding-right: 1rem;
         }
         
         .form-label .required {
@@ -413,6 +414,8 @@
             font-size: 0.85rem;
             margin-bottom: 2rem;
         }
+
+
         
         .workflow-step {
             background: #FFFFFF;
@@ -444,9 +447,16 @@
             flex-shrink: 0;
         }
         
-        .step-info {
-            flex: 1;
-        }
+       
+
+        /* Better alignment for step header */
+.step-info {
+    flex: 1;
+}
+
+.step-info .d-flex {
+    width: 100%;
+}
         
         .step-label {
             font-size: 0.7rem;
@@ -462,25 +472,13 @@
             color: #111827;
             font-size: 1.1rem;
             border: none;
-            background: transparent;
-            padding: 0;
-            width: 100%;
+            background: #f8fafc;
+            padding: 0.5rem 1rem;
+            width: 78%;
+            border-radius: 0.5rem;
         }
         
-        .step-category-dropdown {
-            position: absolute;
-            top: 1.75rem;
-            right: 1.75rem;
-        }
         
-        .step-category-select {
-            min-width: 200px;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            font-weight: 600;
-            letter-spacing: 0.3px;
-            position: relative;
-        }
         
         /* Custom Dropdown for Step Category */
         .category-dropdown {
@@ -501,7 +499,7 @@
             cursor: pointer;
             transition: all 0.3s;
             position: relative;
-            min-width: 200px;
+            min-width: 216px;
             text-align: left;
         }
         
@@ -572,7 +570,7 @@
         /* Verifiers */
         .verifiers-label {
             font-size: 0.75rem;
-            color: #6B7280;
+            color: #374151;
             text-transform: uppercase;
             font-weight: 700;
             letter-spacing: 0.3px;
@@ -581,12 +579,21 @@
         
         .auto-sync-link {
             color: var(--primary-indigo);
+            background-color: #efeff0;
             font-size: 0.75rem;
             font-weight: 600;
             text-transform: uppercase;
-            text-decoration: none;
-            letter-spacing: 0.3px;
+            padding: 0.05rem 0.75rem;            
+            border: 1px solid #E5E7EB;
+            border-radius: 2rem;
         }
+
+
+
+
+        
+    
+    
         
         .verifier-tags {
             display: flex;
@@ -601,61 +608,82 @@
             border-radius: 0.75rem;
             font-size: 0.85rem;
             font-weight: 600;
-            color: #374151;
+            color: #727e94;
         }
         
+    
         /* Signature Threshold Card */
-        .signature-card {
-            background: linear-gradient(135deg, var(--primary-indigo), #6366F1);
-            border-radius: 1.25rem;
-            padding: 2rem;
-            color: white;
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-            width: 56%;
-        }
-        
-        .signature-number {
-            width: 80px;
-            height: 80px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 1.25rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-            font-weight: 900;
-            flex-shrink: 0;
-        }
-        
-        .signature-content {
-            flex: 1;
-        }
-        
-        .signature-label {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            margin-bottom: 0.75rem;
-            opacity: 0.9;
-        }
-        
-        .signature-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-        
-        .signature-description {
-            font-size: 0.85rem;
-            opacity: 0.9;
-            line-height: 1.5;
-        }
+.signature-card {
+    background: linear-gradient(135deg, var(--primary-indigo), #6366F1);
+    border-radius: 1.25rem;
+    padding: 1.5rem 2rem;
+    color: white;
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    width: 45%;
+}
+
+.signature-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+.required-approvals-label {
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    opacity: 0.9;
+    text-align: center;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+.signature-number {
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 1.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    font-weight: 900;
+    flex-shrink: 0;
+    line-height: 1;
+}
+
+.signature-content {
+    flex: 1;
+    padding-top: 0.25rem;
+}
+
+.signature-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.75rem;
+    opacity: 0.9;
+}
+
+.signature-label i {
+    font-size: 0.8rem;
+}
+
+.signature-description {
+    font-size: 0.8rem;
+    opacity: 0.9;
+    line-height: 1.5;
+    margin: 0;
+}
         
         /* Insert Step Area */
         .insert-step-area {
@@ -770,11 +798,42 @@
                 <i class="bi bi-chevron-down ms-auto"></i>
             </a>
 
-            <a href="#" class="menu-item">
+            <a href="#" class="menu-item" id="maintenanceToggle">
                 <i class="bi bi-wrench"></i>
                 <span>Maintenance</span>
                 <i class="bi bi-chevron-down ms-auto"></i>
             </a>
+
+            <div class="submenu" id="maintenanceSubmenu">
+                <a href="product-category-list.html" class="menu-item">
+                    <i class="bi bi-layers"></i>
+                    <span>Product Category</span>
+                </a>
+                <a href="price-base-list.html" class="menu-item">
+                    <i class="bi bi-database"></i>
+                    <span>Price Base</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="bi bi-box-seam"></i>
+                    <span>Product</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="bi bi-gear"></i>
+                    <span>Product Specification</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="bi bi-suitcase-lg"></i>
+                    <span>Local Agent</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="bi bi-truck"></i>
+                    <span>Supplier</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="bi bi-shield-check"></i>
+                    <span>GTC</span>
+                </a>
+            </div>
 
             <a href="#" class="menu-item expanded" id="workflowToggle">
                 <i class="bi bi-gear"></i>
@@ -797,7 +856,7 @@
                 </a>
             </div>
             
-            <a href="#" class="menu-item">
+            <a href="#" class="menu-item" id="tendertToggle">
                 <i class="bi bi-file-earmark-text"></i>
                 <span>Tender</span>
                 <i class="bi bi-chevron-down ms-auto"></i>
@@ -951,64 +1010,76 @@
                 <p class="steps-description">Configure the chronological order of verifications</p>
                 
                 <!-- Step 1 -->
-                <div class="workflow-step">
-                    <div class="step-category-dropdown">
-                        <div class="category-dropdown">
-                            <button class="category-dropdown-toggle" id="categoryDropdown">
-                                Approval
-                            </button>
-                            <div class="category-dropdown-menu" id="categoryMenu">
-                                <button class="category-dropdown-item" data-value="review">Review</button>
-                                <button class="category-dropdown-item active" data-value="approval">Approval</button>
-                                <button class="category-dropdown-item" data-value="review-approval">Review & Approval</button>
-                                <button class="category-dropdown-item" data-value="upload">Upload</button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="step-header">
-                        <div class="step-number">1</div>
-                        <div class="step-info">
-                            <div class="step-label">Step Title</div>
-                            <input type="text" class="step-title-input" value="Initial Verification">
-                        </div>
-                    </div>
-                    
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            <label class="form-label">Target Governance Role <span class="required">*</span></label>
-                            <select class="form-select">
-                                <option>Commercial Verification (COM_GRP_04)</option>
-                                <option>TC Committee Members</option>
-                                <option>TC Committee Chairman</option>
-                                <option>SHLPC Committee Members</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div class="mb-4">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <label class="verifiers-label mb-0">Whitelist Authorized Verifiers (2 Assigned)</label>
-                            <a href="#" class="auto-sync-link">Automatic Group Sync</a>
-                        </div>
-                        <div class="verifier-tags">
-                            <span class="verifier-tag">Katrina Bennett</span>
-                            <span class="verifier-tag">Gretchen Bodinski</span>
-                        </div>
-                    </div>
-                    
-                    <div class="signature-card">
-                        <div class="signature-number">1</div>
-                        <div class="signature-content">
-                            <div class="signature-label">
-                                <i class="bi bi-shield-check"></i>
-                                <span>Required Approvals</span>
-                            </div>
-                            <div class="signature-title">Signature Threshold</div>
-                            <div class="signature-description">Define the minimum number of approvals required from the <strong>Commercial Verification</strong> pool to progress this step.</div>
+<div class="workflow-step">
+    <div class="step-header">
+        <div class="step-number">1</div>
+        <div class="step-info">
+            <div class="d-flex align-items-center gap-4">
+                <div style="flex: 1;">
+                    <div class="step-label">Step Title</div>
+                    <input type="text" class="step-title-input" value="Initial Verification" style="width: 100%;">
+                </div>
+                <div style="width: 220px;">
+                    <div class="step-label" style="white-space: nowrap;">STEP CATEGORY</div>
+                    <div class="category-dropdown">
+                        <button class="category-dropdown-toggle" id="categoryDropdown" style="width: 100%;">
+                            Approval
+                        </button>
+                        <div class="category-dropdown-menu" id="categoryMenu" style="width: 100%;">
+                            <button class="category-dropdown-item" data-value="review">Review</button>
+                            <button class="category-dropdown-item active" data-value="approval">Approval</button>
+                            <button class="category-dropdown-item" data-value="review-approval">Review & Approval</button>
+                            <button class="category-dropdown-item" data-value="upload">Upload</button>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+<div style="display: flex; align-items: flex-start; gap: 2rem; padding-left: 5.3rem;">
+    
+    <!-- Left: Role + Verifiers -->
+    <div style="flex: 1;">
+        <div class="mb-4">
+            <label class="form-label">Target Governance Role <span class="required">*</span></label>
+            <select class="form-select">
+                <option>Commercial Verification (COM_GRP_04)</option>
+                <option>TC Committee Members</option>
+                <option>TC Committee Chairman</option>
+                <option>SHLPC Committee Members</option>
+            </select>
+        </div>
+
+        <div class="mb-4">
+            <div class="d-flex align-items-center gap-5 mb-3">
+                <label class="verifiers-label mb-0">Whitelist Authorized Verifiers (2 Assigned)</label>
+                <label class="auto-sync-link">Automatic Group Sync</label>
+            </div>
+            <div class="verifier-tags">
+                <span class="verifier-tag">Katrina Bennett</span>
+                <span class="verifier-tag">Gretchen Bodinski</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right: Signature Card -->
+    <div class="signature-card" style="flex-shrink: 0;">
+        <div class="signature-left">
+            <div class="required-approvals-label">REQUIRED<br>APPROVALS</div>
+            <div class="signature-number">1</div>
+        </div>
+        <div class="signature-content">
+            <div class="signature-label">
+                <i class="bi bi-shield-check"></i>
+                <span>SIGNATURE THRESHOLD</span>
+            </div>
+            <div class="signature-description">Define the minimum number of approvals required from the <strong>Commercial Verification</strong> pool to progress this step.</div>
+        </div>
+    </div>
+
+
+</div>
+</div>
                 
                 <!-- Insert New Step Area -->
                 <div class="insert-step-area">
@@ -1040,6 +1111,18 @@
         // Set current date
         document.getElementById('currentDate').textContent = new Date().toLocaleDateString();
         
+        // Add Maintenance toggle handler
+        const maintenanceToggle = document.getElementById('maintenanceToggle');
+        const maintenanceSubmenu = document.getElementById('maintenanceSubmenu');
+        
+        if (maintenanceToggle && maintenanceSubmenu) {
+            maintenanceToggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                maintenanceSubmenu.classList.toggle('show');
+                maintenanceToggle.classList.toggle('expanded');
+            });
+        }
+
         // Workflow submenu toggle
         const workflowToggle = document.getElementById('workflowToggle');
         const workflowSubmenu = document.getElementById('workflowSubmenu');
