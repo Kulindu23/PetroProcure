@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Workflow – Active Linked Tenders | PetroProcure</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        
+        :root {
+            --primary:       #4F46E5;
+            --primary-light: #EEF2FF;
+            --danger:        #F43F5E;
+            --surface:       #F8FAFC;
+            --border:        #E5E7EB;
+            --txt-1:         #111827;
+            --txt-2:         #6B7280;
+            --txt-3:         #9CA3AF;
+            --sidebar-w:     230px;
+        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background: var(--surface); color: var(--txt-1); font-size: 14px; }
+        a { text-decoration: none; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: #D1D5DB; border-radius: 4px; }
+
+        
+        .sidebar {
+            position: fixed; inset: 0 auto 0 0;
+            width: var(--sidebar-w);
+            background: #fff;
+            border-right: 1px solid var(--border);
+            display: flex; flex-direction: column;
+            z-index: 100; overflow-y: auto;
+        }
+        .sb-logo {
+            display: flex; align-items: center; gap: 10px;
+            padding: 14px 14px 13px;
+            border-bottom: 1px solid #F3F4F6;
+            flex-shrink: 0;
+        }
+        .sb-logo-box {
+            width: 32px; height: 32px; border-radius: 8px;
+            background: var(--primary);
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; font-weight: 800; font-size: 0.72rem; flex-shrink: 0;
+        }
+        .sb-logo-name { font-weight: 800; font-size: 0.88rem; color: var(--txt-1); line-height: 1.2; }
+        .sb-logo-sub  { font-size: 0.56rem; color: var(--txt-3); text-transform: uppercase; letter-spacing: .6px; font-weight: 600; }
+
+        .sb-menu { flex: 1; padding: 8px 0; overflow-y: auto; }
+
+        .sb-item {
+            display: flex; align-items: center; gap: 9px;
+            padding: 7px 12px; margin: 2px 8px;
+            border-radius: 8px; font-size: 0.8rem; font-weight: 500;
+            color: var(--txt-2); cursor: pointer;
+            transition: background .15s, color .15s;
+            user-select: none;
+        }
+        .sb-item:hover { background: #F9FAFB; color: var(--primary); }
+        .sb-item.active { background: var(--primary-light); color: var(--primary); font-weight: 700; }
+        .sb-item.parent-active { background: var(--primary-light); color: var(--primary); }
+        .sb-item .icon { width: 15px; text-align: center; font-size: 0.9rem; flex-shrink: 0; }
+        .sb-item .chev { margin-left: auto; font-size: 0.68rem; color: var(--txt-3); transition: transform .25s; }
+        .sb-item.open .chev { transform: rotate(180deg); }
+
+        .sb-sub { max-height: 0; overflow: hidden; transition: max-height .3s ease; }
+        .sb-sub.open { max-height: 400px; }
+        .sb-sub .sb-item { padding: 6px 12px 6px 34px; font-size: 0.76rem; margin: 1px 8px; }
+
+        .sb-user {
+            padding: 10px 12px;
+            border-top: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+        .sb-user-lbl { font-size: 0.54rem; color: var(--txt-3); text-transform: uppercase; letter-spacing: .6px; font-weight: 700; margin-bottom: 6px; }
+        .avatar {
+            width: 30px; height: 30px; border-radius: 50%;
+            background: linear-gradient(135deg,var(--primary),#7C3AED);
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; font-weight: 700; font-size: 0.65rem; flex-shrink: 0;
+        }
+        .sb-uname { font-size: 0.8rem; font-weight: 700; color: var(--txt-1); line-height: 1.2; }
+        .sb-uorg  { font-size: 0.68rem; color: var(--txt-2); }
+
+      
+        .main { margin-left: var(--sidebar-w); min-height: 100vh; display: flex; flex-direction: column; }
+
+        .top-bar {
+            padding: 16px 28px 14px;
+            
+            background: var(--surface);
+        }
+        .top-bar-title    { font-size: 1.45rem; font-weight: 800; color: var(--txt-1); line-height: 1.2; }
+        .top-bar-subtitle { font-size: 0.62rem; color: var(--txt-3); text-transform: uppercase; letter-spacing: .7px; font-weight: 600; margin-top: 2px; }
+
+        .content { flex: 1; padding: 22px 28px; }
+
+        .footer {
+            background: #fff; border-top: 1px solid var(--border);
+            padding: 12px 28px;
+        }
+        .footer-txt { font-size: 0.73rem; color: var(--txt-3); }
+
+        
+        .wf-row {
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 16px; margin-bottom: 14px; flex-wrap: wrap;
+        }
+        .wf-left { display: flex; align-items: center; gap: 14px; }
+
+        .back-btn {
+            width: 30px; height: 30px;
+            border: 1px solid var(--border); border-radius: 7px;
+            background: #fff; display: flex; align-items: center; justify-content: center;
+            color: var(--txt-2); font-size: 0.82rem; cursor: pointer;
+            transition: .15s; flex-shrink: 0;
+        }
+        .back-btn:hover { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
+
+        .wf-title     { font-size: 1.6rem; font-weight: 900; color: var(--txt-1); line-height: 1.1; }
+        .wf-subtitle  { font-size: 0.62rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: .6px; margin-top: 3px; }
+
+        .wf-right { display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
+
+        
+        .stat-chip {
+            display: flex; 
+            align-items: center; 
+            gap: 14px;
+            background: #fff; 
+            border: 1px solid var(--border); 
+            border-radius: 9px;
+            padding: 6px 16px; 
+            height: 50px;
+        }
+        .stat-col { 
+            display: flex; 
+            flex-direction: column; }
+
+        .stat-lbl { 
+            font-size: 0.54rem; 
+            color: var(--txt-3); 
+            text-transform: uppercase; 
+            letter-spacing: .6px; 
+            font-weight: 700; 
+
+            margin-bottom: 3px; }
+
+        .stat-val { font-size: 0.8rem; font-weight: 700; color: var(--primary); }
+        .stat-div { width: 1px; height: 26px; background: var(--border); }
+
+        
+
+        
+        .active-status-wrap { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: flex-start;
+            gap: 6px; }
+
+        .active-status-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #fff;
+    border-radius: 9px;
+    padding: 7px 14px 7px 16px;
+    border: 1px solid #E5E7EB;
+    height: 45px;
+}
+
+    .active-status-lbl {
+    font-size: 0.62rem;
+    font-weight: 700;
+    color: var(--txt-2);
+    text-transform: uppercase;
+    letter-spacing: .6px;
+    white-space: nowrap;
+}
+
+            .status-restricted-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 3px 3px 3px;
+    border: 1px solid #FECDD3;
+    border-radius: 50px;
+    background: #FFF1F2;
+    font-size: 0.5rem;
+    font-weight: 700;
+    color: #E11D48;
+    letter-spacing: .2px;
+    white-space: nowrap;
+}
+
+       
+        .tog { 
+            position: relative; 
+            width: 40px; 
+            height: 21px; 
+            display: inline-block; }
+
+        .tog input { 
+            opacity: 0; 
+            width: 0; 
+            height: 0; 
+            position: absolute;
+            
+         }
+
+        .tog-track {
+            position: absolute; 
+            inset: 0; 
+            border-radius: 100px;
+            background: #D1D5DB; 
+            cursor: pointer; 
+            transition: background .2s;
+        }
+        .tog-track::before {
+            content: ''; 
+            position: absolute;
+            width: 17px; 
+            height: 17px; 
+            top: 3px; 
+            left: 3px;
+            background: #fff; 
+            border-radius: 50%;
+            transition: transform .2s;
+            box-shadow: 0 1px 3px rgba(0,0,0,.18);
+        }
+        .tog input:checked  + .tog-track {
+             background: var(--primary); }
+
+        .tog input:checked  + .tog-track::before { 
+            transform: translateX(19px); }
+
+        .tog input:disabled + .tog-track { 
+            opacity: .65; 
+            cursor: not-allowed; }
+
+        
+        .btn-save {
+            height: 40px; 
+            padding: 0 18px;
+            background: linear-gradient(135deg, #818CF8, #A5B4FC);
+            border: none; 
+            border-radius: 9px;
+            color: #fff; 
+            font-weight: 700; 
+            font-size: 0.8rem;
+            cursor: not-allowed; 
+            opacity: .75;
+            white-space: nowrap;
+            font-family: 'Inter', sans-serif;
+        }
+
+       
+        .hr { 
+            border: none; 
+            border-top: 1px solid var(--border);
+             margin: 4px 0 18px; }
+
+       
+        .gov-banner {
+            background: #FFFBEB; 
+            border: 1px  #FDE68A; 
+            border-radius: 0.8rem;
+            padding: 18px 22px; 
+            margin-bottom: 20px;
+            display: flex; 
+            align-items: flex-start; 
+            gap: 14px;
+        }
+        .gov-icon {
+            width: 36px; 
+            height: 36px; 
+            border-radius: 0.7rem;
+            background: #FEF3C7; 
+            border: 1.5px  #FCD34D;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            color: #D97706; 
+            font-size: 0.95rem; 
+            flex-shrink: 0; 
+            margin-top: 2px;
+        }
+        .gov-body { flex: 1; }
+        .gov-title { font-size: 0.8rem; font-weight: 800; color: #92400E; text-transform: uppercase; letter-spacing: .3px; margin-bottom: 6px; }
+        .gov-desc  { font-size: 0.76rem; color: #78350F; font-style: italic; line-height: 1.65; margin-bottom: 14px; }
+        .gov-desc strong { font-style: normal; font-weight: 700; }
+        .gov-meta  { display: flex; align-items: flex-start; gap: 28px; flex-wrap: wrap; }
+        .gov-meta-col { display: flex; flex-direction: column; gap: 4px; }
+        .gov-meta-lbl { font-size: 0.56rem; color: #D97706; text-transform: uppercase; letter-spacing: .6px; font-weight: 700; }
+        .status-pill {
+            display: inline-block; background: #fff; border: 1px solid #FCD34D;
+            border-radius: 100px; padding: 2px 10px;
+            font-size: 0.7rem; font-weight: 700; color: #374151; letter-spacing: .3px;
+        }
+        
+        .linked-val { font-size: 0.8rem; font-weight: 800; color: var(--danger); }
+
+        
+        .card {
+            background: #fff; border: 1px solid var(--border);
+            border-radius: 14px; padding: 26px 28px;
+        }
+        .card-title { font-size: 1.05rem; font-weight: 800; color: var(--txt-1); margin-bottom: 3px; }
+        .card-sub   { font-size: 0.76rem; color: var(--txt-3); margin-bottom: 22px; }
+
+        .field-lbl {
+            display: block; font-size: 0.58rem; color: var(--txt-3);
+            text-transform: uppercase; letter-spacing: .6px; font-weight: 700;
+            margin-bottom: 6px;
+        }
+        .field-lbl .req { color: var(--danger); }
+
+        .f-input, .f-select, .f-textarea {
+            width: 100%;
+            padding: 9px 12px;
+            border: 1px solid var(--border); 
+            border-radius: 8px;
+            font-size: 0.83rem; 
+            font-weight: 500; 
+            color: var(--txt-1);
+            background: #fff; 
+            outline: none;
+            font-family: 'Inter', sans-serif;
+            transition: border-color .15s, box-shadow .15s;
+        }
+        .f-input:focus, .f-select:focus, .f-textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79,70,229,.1);
+        }
+        
+        .f-input[disabled], .f-select[disabled], .f-textarea[disabled] {
+            background: #FAFAFA; cursor: default; color: #374151;
+        }
+
+        .sel-wrap { position: relative; }
+        .sel-wrap::after {
+            content: '\F282'; font-family: 'bootstrap-icons';
+            position: absolute; right: 11px; top: 50%; transform: translateY(-50%);
+            color: var(--txt-3); pointer-events: none; font-size: 0.72rem;
+        }
+        .f-select { appearance: none; -webkit-appearance: none; padding-right: 28px; cursor: default; }
+
+        .f-textarea { resize: vertical; line-height: 1.6; }
+        .f-textarea::placeholder { color: #C4C9D4; font-weight: 400; }
+    </style>
+</head>
+<body>
+
+
+<aside class="sidebar">
+
+    <div class="sb-logo">
+        <div class="sb-logo-box">PP</div>
+        <div>
+            <div class="sb-logo-name">PetroProcure</div>
+            <div class="sb-logo-sub">E-PROCUREMENT V2</div>
+        </div>
+    </div>
+
+    <nav class="sb-menu">
+
+        <a href="#" class="sb-item">
+            <i class="bi bi-grid icon"></i> Dashboard
+        </a>
+
+       
+        <div class="sb-item" id="t-access" onclick="toggleSub('access')">
+            <i class="bi bi-shield-check icon"></i> Accessibility
+            <i class="bi bi-chevron-down chev"></i>
+        </div>
+        <div class="sb-sub" id="s-access">
+            <a href="#" class="sb-item"><i class="bi bi-person-lock icon"></i> Role Management</a>
+            <a href="#" class="sb-item"><i class="bi bi-key icon"></i> Permissions</a>
+        </div>
+
+        
+        <div class="sb-item" id="t-maint" onclick="toggleSub('maint')">
+            <i class="bi bi-wrench icon"></i> Maintenance
+            <i class="bi bi-chevron-down chev"></i>
+        </div>
+        <div class="sb-sub" id="s-maint">
+            <a href="#" class="sb-item"><i class="bi bi-layers icon"></i> Product Category</a>
+            <a href="#" class="sb-item"><i class="bi bi-database icon"></i> Price Base</a>
+            <a href="#" class="sb-item"><i class="bi bi-box-seam icon"></i> Product</a>
+            <a href="#" class="sb-item"><i class="bi bi-gear icon"></i> Product Specification</a>
+            <a href="#" class="sb-item"><i class="bi bi-suitcase-lg icon"></i> Local Agent</a>
+            <a href="#" class="sb-item"><i class="bi bi-truck icon"></i> Supplier</a>
+            <a href="#" class="sb-item"><i class="bi bi-shield-check icon"></i> GTC</a>
+        </div>
+
+        
+        <div class="sb-item parent-active open" id="t-wf" onclick="toggleSub('wf')">
+            <i class="bi bi-diagram-3 icon"></i> <span style="font-weight:700;">Workflow</span>
+            <i class="bi bi-chevron-down chev"></i>
+        </div>
+        <div class="sb-sub open" id="s-wf">
+            <a href="workflow-collection.html" class="sb-item"><i class="bi bi-list-ul icon"></i> Workflow Collection</a>
+            <a href="#" class="sb-item active"><i class="bi bi-pencil-square icon"></i> Define New Workflow</a>
+            <a href="#" class="sb-item"><i class="bi bi-check-circle icon"></i> Verify Workflow</a>
+        </div>
+
+        
+        <div class="sb-item" id="t-tender" onclick="toggleSub('tender')">
+            <i class="bi bi-file-earmark-text icon"></i> Tender
+            <i class="bi bi-chevron-down chev"></i>
+        </div>
+        <div class="sb-sub" id="s-tender">
+            <a href="#" class="sb-item"><i class="bi bi-collection icon"></i> Tender Collection</a>
+            <a href="#" class="sb-item"><i class="bi bi-plus-circle icon"></i> Create Tender</a>
+        </div>
+
+        
+        <div class="sb-item" id="t-verif" onclick="toggleSub('verif')">
+            <i class="bi bi-check2-square icon"></i> Verification Processes
+            <i class="bi bi-chevron-down chev"></i>
+        </div>
+        <div class="sb-sub" id="s-verif">
+            <a href="#" class="sb-item"><i class="bi bi-file-earmark-check icon"></i> Tender Verification</a>
+            <a href="#" class="sb-item"><i class="bi bi-file-earmark-text icon"></i> Document Verification</a>
+            <a href="#" class="sb-item"><i class="bi bi-sliders icon"></i> Evaluation Verification</a>
+        </div>
+
+        <a href="#" class="sb-item"><i class="bi bi-bar-chart icon"></i> Bid Statistic</a>
+
+    </nav>
+
+    <div class="sb-user">
+        <div class="sb-user-lbl">Logged in as</div>
+        <div class="d-flex align-items-center gap-2">
+            <div class="avatar">AD</div>
+            <div>
+                <div class="sb-uname">Administrator</div>
+                <div class="sb-uorg">Ceypetco</div>
+            </div>
+        </div>
+    </div>
+
+</aside>
+
+
+
+<div class="main">
+
+   
+    <div class="top-bar">
+        <div class="top-bar-title">Create Workflow</div>
+        <div class="top-bar-subtitle">E-PROCUREMENT PIPELINE MANAGEMENT</div>
+    </div>
+
+    
+    <div class="content">
+
+        <!-- Workflow Governance Header Row -->
+        <div class="wf-row">
+
+            <!-- Left -->
+            <div class="wf-left">
+                <a href="workflow-collection.html" class="back-btn" title="Back">
+                    <i class="bi bi-chevron-left"></i>
+                </a>
+                <div>
+                    <div class="wf-title">Workflow Governance</div>
+                    <div class="wf-subtitle">BLUEPRINT APPROVAL HIERARCHIES</div>
+                </div>
+            </div>
+
+            
+            <div class="wf-right">
+
+                
+                <div class="stat-chip">
+                    <div class="stat-col">
+                        <span class="stat-lbl">NODES</span>
+                        <span class="stat-val">1 Steps</span>
+                    </div>
+                    <div class="stat-div"></div>
+                    <div class="stat-col">
+                        <span class="stat-lbl">TOTAL APPROVALS</span>
+                        <span class="stat-val">1 Required</span>
+                    </div>
+                </div>
+
+                <!-- Active Status -->
+                <div class="active-status-wrap">
+                    <div class="status-restricted-pill">
+                        Status Restricted
+                    </div>
+                    <div class="active-status-box">
+                        <span class="active-status-lbl">ACTIVE STATUS</span>
+                        
+                        <label class="tog">
+                            <input type="checkbox" checked disabled>
+                            <span class="tog-track"></span>
+                        </label>
+                    </div>
+                </div>
+
+                
+                <button class="btn-save" disabled>Save Status Changes</button>
+
+            </div>
+        </div>
+
+        <hr class="hr">
+
+        
+        <div class="gov-banner">
+            <div class="gov-icon">
+                <i class="bi bi-shield-check"></i>
+            </div>
+            <div class="gov-body">
+                <div class="gov-title">ENTERPRISE GOVERNANCE LOCK</div>
+                <div class="gov-desc">
+                    "To maintain the audit integrity of active procurement cycles, structural modifications to this workflow are strictly prohibited after creation. Only the <strong>Active Status</strong> can be adjusted, provided no active tenders are governed by this blueprint."
+                </div>
+                <div class="gov-meta">
+                    <div class="gov-meta-col">
+                        <span class="gov-meta-lbl">STATUS</span>
+                        <span class="status-pill">OPERATIONAL</span>
+                    </div>
+                     <div class="stat-div" style="background:#D97706; height: 30px ;"></div>
+                    <div class="gov-meta-col">
+                        <span class="gov-meta-lbl">ACTIVE LINKED TENDERS</span>
+                        
+                        <span class="linked-val">3 Records</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="card">
+            <div class="card-title">Structural Logic &amp; Compatibility</div>
+            <div class="card-sub">View identity and operational status</div>
+
+            <div class="row g-3">
+
+                <!-- Left column -->
+                <div class="col-lg-6">
+
+                    <div class="mb-3">
+                        <label class="field-lbl">WORKFLOW CATEGORY <span class="req">*</span></label>
+                        <div class="sel-wrap">
+                            <select class="f-select" disabled>
+                                <option selected>Tender Details Verification</option>
+                                <option>Tender Evaluation Verification</option>
+                                <option>Tender Document Verification</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="field-lbl">WORKFLOW NAME <span class="req">*</span></label>
+                        <input type="text" class="f-input" value="Refined Standard Audit" disabled>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <label class="field-lbl">APPLICABLE PRODUCT TYPE <span class="req">*</span></label>
+                            <div class="sel-wrap">
+                                <select class="f-select" disabled>
+                                    <option selected>Refined &amp; Crude</option>
+                                    <option>Refined Only</option>
+                                    <option>Crude Only</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label class="field-lbl">APPLICABLE TENDER TYPE <span class="req">*</span></label>
+                            <div class="sel-wrap">
+                                <select class="f-select" disabled>
+                                    <option selected>Single &amp; Term</option>
+                                    <option>Single Only</option>
+                                    <option>Term Only</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Right column -->
+                <div class="col-lg-6">
+
+                    <div class="mb-3">
+                        <label class="field-lbl">OPERATIONAL DESCRIPTION</label>
+                        <textarea class="f-textarea" rows="4" disabled
+                        >The baseline multi-tier approval process for high-value refined petroleum tenders. Requires multiple levels of commercial and technical sign-offs.</textarea>
+                    </div>
+
+                    <div>
+                        <label class="field-lbl">WORKFLOW PURPOSE &amp; JUSTIFICATION (FOR VERIFIER) <span class="req">*</span></label>
+                        <textarea class="f-textarea" rows="4" disabled
+                            placeholder="Explain why this new workflow logic is necessary to the higher-level verifier..."></textarea>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    
+    <footer class="footer">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <span class="footer-txt">© 2024 PetroProcure. All rights reserved.</span>
+            <span class="footer-txt">Version 2.0 &nbsp;|&nbsp; Last Updated: <span id="fdate"></span></span>
+        </div>
+    </footer>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    /* Footer date */
+    document.getElementById('fdate').textContent =
+        new Date().toLocaleDateString('en-US', { year:'numeric', month:'short', day:'numeric' });
+
+    /* Sidebar sub-menu toggle */
+    function toggleSub(key) {
+        const trigger = document.getElementById('t-' + key);
+        const sub     = document.getElementById('s-' + key);
+        if (!trigger || !sub) return;
+        const isOpen = sub.classList.contains('open');
+        sub.classList.toggle('open', !isOpen);
+        trigger.classList.toggle('open', !isOpen);
+    }
+</script>
+</body>
+</html>
