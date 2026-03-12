@@ -458,10 +458,10 @@
             <a href="workflow-collection.html" class="sb-item">
                 <i class="bi bi-list-ul ico"></i> Workflow Collection
             </a>
-            <a href="workflow-define.html" class="sb-item">
+            <a href="workflow-define-new.html" class="sb-item">
                 <i class="bi bi-pencil-square ico"></i> Define New Workflow
             </a>
-            <a href="verify-workflow.html" class="sb-item active">
+            <a href="workflow-verify-collection.html" class="sb-item active">
                 <i class="bi bi-shield-check ico"></i> Verify Workflow
             </a>
         </div>
@@ -524,7 +524,7 @@
         <div class="page-hdr">
 
             <div class="page-hdr-left">
-                <a href="workflow-collection.html" class="back-btn" title="Back">
+                <a href="workflow-verify-collection.html" class="back-btn" title="Back">
                     <i class="bi bi-chevron-left"></i>
                 </a>
                 <div style="min-width:0;">
@@ -676,16 +676,16 @@
 
     function handleApprove() {
         if (btnApprove.classList.contains('faded')) return;
-        window.location.href = 'workflow-collection.html';
+        window.location.href = '#';
     }
 
     function handleReject() {
         if (btnReject.classList.contains('faded')) return;
-        window.location.href = 'workflow-collection.html';
+        window.location.href = '#';
     }
 
     function viewDetails() {
-        window.location.href = 'workflow-details.html';
+        window.location.href = 'workflow-verify-details.html';
     }
 
 </script>
