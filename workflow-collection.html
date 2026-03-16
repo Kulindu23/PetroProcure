@@ -204,20 +204,72 @@
             padding-bottom: 2rem;
             border-bottom: 1px solid #E5E7EB;
         }
+
+        .category-filter-all {
+            padding: 0.75rem 1.75rem;
+            background: var(--primary-indigo);
+            border: 1px solid var(--primary-indigo);
+            border-radius: 0.75rem;
+            color: #FFFFFF;
+            font-weight: 700;
+            transition: all 0.3s;
+            cursor: pointer;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            white-space: nowrap;
+            flex-shrink: 0;
+            align-self: center; 
+        }
+
+        .category-filter-all:not(.active) {
+            background: #FFFFFF;
+            border-color: #E5E7EB;
+            color: #6B7280;
+        }
+
+        .category-filter-all:hover:not(.active) {
+            background-color: #F3F4F6;
+            border-color: #D1D5DB;
+        }
+        .category-divider {
+            width: 1px;
+            background-color: #E5E7EB;
+            margin: 0 1.25rem;
+            align-self: stretch;
+            flex-shrink: 0;
+        }
+
+        .category-filter-grid {
+            display: grid;
+            grid-template-columns: repeat(3, auto);
+            gap: 0.6rem;
+            align-items: center;
+        }
+
+        .category-filter-grid .category-filter-btn:last-child {
+            grid-column: 1 / 2;
+        }
         
         .category-filter-btn {
             padding: 0.75rem 1.5rem;
             background: #FFFFFF;
             border: 1px solid #E5E7EB;
-            border-radius: 0.75rem;
+            border-radius: 0.65rem;
             color: #6B7280;
             font-weight: 600;
             transition: all 0.3s;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
+             white-space: nowrap;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
         }
         
         .category-filter-btn:hover {
@@ -230,6 +282,15 @@
             color: #FFFFFF;
             border-color: var(--primary-indigo);
         }
+        .category-filter-btn i {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+
+        .category-filter-btn.all-btn {
+             padding: 1rem;   
+             font-size: 0.75rem;      
+}
         
         /* Primary Button */
         .btn-primary-custom {
@@ -726,23 +787,35 @@
             
             <!-- Category Filters -->
             <div class="category-filters">
-                <button class="category-filter-btn active" data-category="all">
+                <button class="category-filter-all active" data-category="all">
                    
                     ALL CATEGORIES
                 </button>
-                <button class="category-filter-btn" data-category="tender-details">
-                    <i class="bi bi-shield-check"></i>
-                    TENDER DETAILS
-                </button>
-                <button class="category-filter-btn" data-category="tender-document">
-                    <i class="bi bi-file-earmark-text"></i>
-                    TENDER DOCUMENT
-                </button>
-                <button class="category-filter-btn" data-category="tender-evaluation">
-                    <i class="bi bi-sliders"></i>
-                    TENDER EVALUATION
-                </button>
+
+                <div class="category-divider"></div>
+
+                 <div class="category-filter-grid">
+                    <button class="category-filter-btn" data-category="procurement-need">
+                        <i class="bi bi-shield-check"></i>
+                        PROCUREMENT NEED IDENTIFICATION
+                    </button>
+                    <button class="category-filter-btn" data-category="procurement-document">
+                        <i class="bi bi-shield-check"></i>
+                        PROCUREMENT DOCUMENT GOVERNANCE &amp; APPROVAL
+                    </button>
+                    <button class="category-filter-btn" data-category="preliminary-bid">
+                        <i class="bi bi-file-earmark-text"></i>
+                        PRELIMINARY BID EVALUATION &amp; COMPLIANCE
+                    </button>
+                    <button class="category-filter-btn" data-category="final-bid">
+                        <i class="bi bi-sliders"></i>
+                        FINAL BID EVALUATION &amp; APPROVAL
+                    </button>
+                </div>
             </div>
+
+
+               
             
             <!-- Workflow Cards Grid -->
             <div class="workflow-grid" id="workflowGrid">
@@ -981,23 +1054,28 @@
         });
         
         // Category filter functionality
-        const categoryButtons = document.querySelectorAll('.category-filter-btn');
+         const allBtn = document.querySelector('.category-filter-all');
+        const gridBtns = document.querySelectorAll('.category-filter-btn');
         const workflowCards = document.querySelectorAll('.workflow-card');
-        
-        categoryButtons.forEach(button => {
+
+        function filterCards(category) {
+            workflowCards.forEach(card => {
+                card.style.display = (category === 'all' || card.dataset.category === category) ? 'block' : 'none';
+            });
+        }
+
+        allBtn.addEventListener('click', () => {
+            allBtn.classList.add('active');
+            gridBtns.forEach(b => b.classList.remove('active'));
+            filterCards('all');
+        });
+
+        gridBtns.forEach(button => {
             button.addEventListener('click', () => {
-                categoryButtons.forEach(btn => btn.classList.remove('active'));
+                allBtn.classList.remove('active');
+                gridBtns.forEach(b => b.classList.remove('active'));
                 button.classList.add('active');
-                
-                const category = button.dataset.category;
-                
-                workflowCards.forEach(card => {
-                    if (category === 'all' || card.dataset.category === category) {
-                        card.style.display = 'block';
-                    } else {
-                        card.style.display = 'none';
-                    }
-                });
+                filterCards(button.dataset.category);
             });
         });
     </script>
